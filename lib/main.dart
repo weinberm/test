@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:waste_walking_ba/amplify.dart';
 import 'widgets/map.dart';
+import 'geolocation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,12 +15,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Waste Walking Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Waste Walking Demo'),
     );
   }
 }
@@ -141,22 +142,50 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class Tab1 extends StatelessWidget {
+  BackgroundLocationUtils locationUtils = BackgroundLocationUtils();
+
+  void printIncCounter() {
+    locationUtils.incrementCounter();
+    print(locationUtils.getCounter());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
         color: Colors.amber,
-        child: Center(
-          child: Text('Tab 1 Content'),
+        child: Column(
+          children: [
+            Text('Tab 1 Content'),
+            TextButton(
+              child: Text("1"),
+              onPressed: printIncCounter,
+            )
+          ],
         ));
   }
 }
 
 class Tab2 extends StatelessWidget {
+  BackgroundLocationUtils locationUtils = BackgroundLocationUtils();
+
+  void printIncCounter() {
+    locationUtils.incrementCounter();
+    print(locationUtils.getCounter());
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Tab 2 Content'),
-    );
+    return Container(
+        color: Colors.amber,
+        child: Column(
+          children: [
+            Text('Tab 2 Content'),
+            TextButton(
+              child: Text("2"),
+              onPressed: printIncCounter,
+            )
+          ],
+        ));
   }
 }
 
