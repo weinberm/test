@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-wastewalkingba-dev-113145-authRole",
+      "UnauthRoleArn": "arn:aws:iam::226238814517:role/amplify-wastewalkingba-dev-113145-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::226238814517:role/amplify-wastewalkingba-dev-113145-authRole",
+      "Region": "eu-central-1",
+      "DeploymentBucketName": "amplify-wastewalkingba-dev-113145-deployment",
+      "UnauthRoleName": "amplify-wastewalkingba-dev-113145-unauthRole",
+      "StackName": "amplify-wastewalkingba-dev-113145",
+      "StackId": "arn:aws:cloudformation:eu-central-1:226238814517:stack/amplify-wastewalkingba-dev-113145/0deabcc0-38f3-11ee-9163-02ca89184ae2",
+      "AmplifyAppId": "d2e035xqoch8d1"
+    }
+  }
+}
