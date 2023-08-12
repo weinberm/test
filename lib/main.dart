@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:amplify_api/amplify_api.dart';
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:waste_walking_ba/amplify.dart';
-//Database
-import 'models/ModelProvider.dart';
-import 'amplifyconfiguration.dart';
+import 'widgets/map.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,43 +39,11 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    // _configureAmplify();
 
     _awsService = AmplifyService();
     _awsService.configure();
   }
 
-  // Future<void> _configureAmplify() async {
-
-  //   final api = AmplifyAPI(modelProvider: ModelProvider.instance);
-  //   await Amplify.addPlugin(api);
-
-  //   try {
-  //     await Amplify.configure(amplifyconfig);
-  //   } on Exception catch (e) {
-  //     safePrint('An error occurred configuring Amplify: $e');
-  //   }
-  // }
-
-//   Future<void> createRecord() async {
-//   try {
-//     final record = Record(
-//         date: DateTime.now().toString(),
-//         coordinates: [Coordinate(longtitude: 48.00, latitude: 9.0)],
-//         user_id: 1);
-//     final request = ModelMutations.create(record);
-//     final response = await Amplify.API.mutate(request: request).response;
-
-//     final createdTodo = response.data;
-//     if (createdTodo == null) {
-//       safePrint('errors: ${response.errors}');
-//       return;
-//     }
-//     safePrint('Mutation result: ${createdTodo.id}');
-//   } on ApiException catch (e) {
-//     safePrint('Mutation failed: $e');
-//   }
-// }
   Future<void> _configureAws() async {
     await _awsService.configure();
   }
@@ -200,7 +164,7 @@ class Tab3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text('Tab 3 Content'),
+      child: WasteWalkMap(),
     );
   }
 }
