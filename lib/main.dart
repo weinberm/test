@@ -36,10 +36,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late final AmplifyService _awsService;
+  BackgroundLocationUtils locationUtils = BackgroundLocationUtils();
 
   @override
   void initState() {
     super.initState();
+
+    locationUtils.initBackgroundLocation();
 
     _awsService = AmplifyService();
     _awsService.configure();
@@ -54,30 +57,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   int _selectedIndex = 2;
+  int started = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 3: School',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 4: School',
-      style: optionStyle,
-    ),
-  ];
 
   final List<Widget> _tabs = [
     Tab1(),
@@ -94,7 +76,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _test() {
-    createRecord();
+    if (started == 0) {
+      started = 1;
+      print(started);
+      locationUtils.startLocationTimer(2);
+    } else {
+      started = 0;
+      print(started);
+      locationUtils.stopLocationTimer();
+    }
+    // createRecord();
   }
 
   @override
