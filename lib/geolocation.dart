@@ -30,6 +30,10 @@ class BackgroundLocationUtils {
     return _counter;
   }
 
+  List<Coordinate> getCoordinateList() {
+    return cordList;
+  }
+
   // Funktion, um einen Timer für die Position zu starten
   void startLocationTimer(int seconds) {
     _locationTimer?.cancel(); // Timer stoppen, wenn bereits aktiv

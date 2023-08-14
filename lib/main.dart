@@ -57,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   int _selectedIndex = 2;
-  int started = 0;
+  bool started = false;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
@@ -76,15 +76,17 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _test() {
-    if (started == 0) {
-      started = 1;
-      print(started);
-      locationUtils.startLocationTimer(2);
-    } else {
-      started = 0;
-      print(started);
-      locationUtils.stopLocationTimer();
-    }
+    setState(() {
+      if (started == false) {
+        started = true;
+        print(started);
+        locationUtils.startLocationTimer(2);
+      } else {
+        started = false;
+        print(started);
+        locationUtils.stopLocationTimer();
+      }
+    });
     // createRecord();
   }
 
@@ -126,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: _tabs[_selectedIndex],
       floatingActionButton: FloatingActionButton(
         onPressed: _test,
-        child: Icon(Icons.play_circle),
+        child: Icon(started ? Icons.stop_circle : Icons.play_circle),
       ),
     );
   }
