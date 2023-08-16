@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:waste_walking_ba/amplify.dart';
-import 'widgets/map.dart';
+import 'views/map.dart';
 import 'geolocation.dart';
 
 import './models/Coordinate.dart';
@@ -94,6 +94,8 @@ class _MyHomePageState extends State<MyHomePage> {
     // createRecord();
   }
 
+  void _lockPosition() {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             FloatingActionButton(
-              onPressed: _test,
+              onPressed: _lockPosition,
               child: Icon(started ? Icons.stop_circle : Icons.play_circle),
             ),
             SizedBox(
