@@ -15,12 +15,12 @@ class AmplifyService {
     }
   }
 
-  Future<void> createRecord() async {
+  Future<void> createRecord(List<Coordinate> coordinates, int user_id) async {
     try {
       final record = Record(
         date: DateTime.now().toString(),
-        coordinates: [Coordinate(longtitude: 48.00, latitude: 9.0)],
-        user_id: 1,
+        coordinates: coordinates,
+        user_id: user_id,
       );
       final request = ModelMutations.create(record);
       final response = await Amplify.API.mutate(request: request).response;

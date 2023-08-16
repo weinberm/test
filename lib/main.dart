@@ -4,6 +4,8 @@ import 'package:waste_walking_ba/amplify.dart';
 import 'widgets/map.dart';
 import 'geolocation.dart';
 
+import './models/Coordinate.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -52,8 +54,8 @@ class _MyHomePageState extends State<MyHomePage> {
     await _awsService.configure();
   }
 
-  Future<void> createRecord() async {
-    await _awsService.createRecord();
+  Future<void> createRecord(List<Coordinate> coordinates, int user_id) async {
+    await _awsService.createRecord(coordinates, user_id);
   }
 
   int _selectedIndex = 2;
@@ -85,6 +87,8 @@ class _MyHomePageState extends State<MyHomePage> {
         started = false;
         print(started);
         locationUtils.stopLocationTimer();
+        createRecord(locationUtils.getCoordinateList(), 700);
+        locationUtils.clearCoordinateList();
       }
     });
     // createRecord();
@@ -93,44 +97,56 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.green,
-        title: Text(widget.title),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Community'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.leaderboard),
-            label: 'Leaderboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assignment),
-            label: 'History',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.black,
-        backgroundColor: Colors.green[600],
-        onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed,
-        selectedFontSize: 10,
-      ),
-      body: _tabs[_selectedIndex],
-      floatingActionButton: FloatingActionButton(
-        onPressed: _test,
-        child: Icon(started ? Icons.stop_circle : Icons.play_circle),
-      ),
-    );
+        appBar: AppBar(
+          backgroundColor: Colors.green,
+          title: Text(widget.title),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+                icon: Icon(Icons.group), label: 'Community'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.leaderboard),
+              label: 'Leaderboard',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.map),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.assignment),
+              label: 'History',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.black,
+          backgroundColor: Colors.green[600],
+          onTap: _onItemTapped,
+          type: BottomNavigationBarType.fixed,
+          selectedFontSize: 10,
+        ),
+        body: _tabs[_selectedIndex],
+        floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              onPressed: _test,
+              child: Icon(started ? Icons.stop_circle : Icons.play_circle),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            FloatingActionButton(
+              onPressed: _test,
+              child: Icon(started ? Icons.stop_circle : Icons.play_circle),
+            )
+          ],
+        ));
   }
 }
 
