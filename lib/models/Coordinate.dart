@@ -22,7 +22,6 @@
 import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart' as amplify_core;
 
-
 /** This is an auto generated class representing the Coordinate type in your schema. */
 class Coordinate {
   final double? _longtitude;
@@ -31,89 +30,90 @@ class Coordinate {
   double? get longtitude {
     return _longtitude;
   }
-  
+
   double? get latitude {
     return _latitude;
   }
-  
-  const Coordinate._internal({longtitude, latitude}): _longtitude = longtitude, _latitude = latitude;
-  
+
+  const Coordinate._internal({longtitude, latitude})
+      : _longtitude = longtitude,
+        _latitude = latitude;
+
   factory Coordinate({double? longtitude, double? latitude}) {
-    return Coordinate._internal(
-      longtitude: longtitude,
-      latitude: latitude);
+    return Coordinate._internal(longtitude: longtitude, latitude: latitude);
   }
-  
+
   bool equals(Object other) {
     return this == other;
   }
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is Coordinate &&
-      _longtitude == other._longtitude &&
-      _latitude == other._latitude;
+        _longtitude == other._longtitude &&
+        _latitude == other._latitude;
   }
-  
+
   @override
   int get hashCode => toString().hashCode;
-  
+
   @override
   String toString() {
     var buffer = new StringBuffer();
-    
+
     buffer.write("Coordinate {");
-    buffer.write("longtitude=" + (_longtitude != null ? _longtitude!.toString() : "null") + ", ");
-    buffer.write("latitude=" + (_latitude != null ? _latitude!.toString() : "null"));
+    buffer.write("longtitude=" +
+        (_longtitude != null ? _longtitude!.toString() : "null") +
+        ", ");
+    buffer.write(
+        "latitude=" + (_latitude != null ? _latitude!.toString() : "null"));
     buffer.write("}");
-    
+
     return buffer.toString();
   }
-  
+
   Coordinate copyWith({double? longtitude, double? latitude}) {
     return Coordinate._internal(
-      longtitude: longtitude ?? this.longtitude,
-      latitude: latitude ?? this.latitude);
+        longtitude: longtitude ?? this.longtitude,
+        latitude: latitude ?? this.latitude);
   }
-  
-  Coordinate copyWithModelFieldValues({
-    ModelFieldValue<double?>? longtitude,
-    ModelFieldValue<double?>? latitude
-  }) {
-    return Coordinate._internal(
-      longtitude: longtitude == null ? this.longtitude : longtitude.value,
-      latitude: latitude == null ? this.latitude : latitude.value
-    );
-  }
-  
-  Coordinate.fromJson(Map<String, dynamic> json)  
-    : _longtitude = (json['longtitude'] as num?)?.toDouble(),
-      _latitude = (json['latitude'] as num?)?.toDouble();
-  
-  Map<String, dynamic> toJson() => {
-    'longtitude': _longtitude, 'latitude': _latitude
-  };
-  
-  Map<String, Object?> toMap() => {
-    'longtitude': _longtitude,
-    'latitude': _latitude
-  };
 
-  static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
+  Coordinate copyWithModelFieldValues(
+      {ModelFieldValue<double?>? longtitude,
+      ModelFieldValue<double?>? latitude}) {
+    return Coordinate._internal(
+        longtitude: longtitude == null ? this.longtitude : longtitude.value,
+        latitude: latitude == null ? this.latitude : latitude.value);
+  }
+
+  Coordinate.fromJson(Map<String, dynamic> json)
+      : _longtitude = (json['longtitude'] as num?)?.toDouble(),
+        _latitude = (json['latitude'] as num?)?.toDouble();
+
+  Map<String, dynamic> toJson() =>
+      {'longtitude': _longtitude, 'latitude': _latitude};
+
+  Map<String, Object?> toMap() =>
+      {'longtitude': _longtitude, 'latitude': _latitude};
+
+  static var schema = amplify_core.Model.defineSchema(
+      define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Coordinate";
     modelSchemaDefinition.pluralName = "Coordinates";
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
-      fieldName: 'longtitude',
-      isRequired: false,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.double)
-    ));
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
-      fieldName: 'latitude',
-      isRequired: false,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.double)
-    ));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.customTypeField(
+            fieldName: 'longtitude',
+            isRequired: false,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.double)));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.customTypeField(
+            fieldName: 'latitude',
+            isRequired: false,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.double)));
   });
 }
