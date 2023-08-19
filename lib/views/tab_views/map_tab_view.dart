@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 
-class MapTabView extends StatefulWidget {
-  const MapTabView({super.key});
+import 'package:waste_walking_ba/viewmodels/main_viewmodel.dart';
+import 'package:waste_walking_ba/viewmodels/map_viewmodel.dart';
 
-  @override
-  State<MapTabView> createState() => _MapTabViewState();
-}
+class MapTabView extends StatelessWidget {
+  const MapTabView({required this.mainViewModel, required this.mapViewModel});
 
-class _MapTabViewState extends State<MapTabView> {
+  final MainViewModel mainViewModel;
+  final MapViewModel mapViewModel;
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder(
-      child: Text("To be implemented Map"),
+    return Placeholder(
+      child: Text("To be implemented Map " + mainViewModel.counter.toString()),
     );
   }
 }
