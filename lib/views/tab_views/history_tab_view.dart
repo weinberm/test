@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 
-class HistoryTabView extends StatefulWidget {
-  const HistoryTabView({super.key});
+import 'package:waste_walking_ba/viewmodels/main_viewmodel.dart';
+import 'package:waste_walking_ba/viewmodels/history_viewmodel.dart';
 
-  @override
-  State<HistoryTabView> createState() => _HistoryTabViewState();
-}
+class HistoryTabView extends StatelessWidget {
+  const HistoryTabView(
+      {required this.mainViewModel, required this.historyViewModel});
 
-class _HistoryTabViewState extends State<HistoryTabView> {
+  final MainViewModel mainViewModel;
+  final HistoryViewModel historyViewModel;
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder(
-      child: Text("To be implemented History"),
+    return Placeholder(
+      child:
+          Text("To be implemented History " + mainViewModel.counter.toString()),
     );
   }
 }

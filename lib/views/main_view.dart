@@ -87,15 +87,14 @@ class MainView extends StatelessWidget {
         selectedIndex: viewModel.selectedIndex,
         onItemTapped: viewModel.changeTabIndex,
       ),
-      body: viewModel.getTabAtIndex(),
+      body: viewModel.getTabAtIndex(viewModel),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          // FloatingActionButton(
-          //   onPressed: viewModel.lockPosition,
-          //   child:
-          //       Icon(viewModel.started ? Icons.stop_circle : Icons.play_circle),
-          // ),
+          FloatingActionButton(
+            onPressed: viewModel.incrementCounter,
+            child: Icon(Icons.abc),
+          ),
           // SizedBox(
           //   height: 10,
           // ),
