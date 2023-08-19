@@ -1,9 +1,9 @@
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'models/ModelProvider.dart';
-import 'amplifyconfiguration.dart';
+import '../models/ModelProvider.dart';
+import '../amplifyconfiguration.dart';
 
-class AmplifyService {
+class AmplifyRecordService {
   Future<void> configure() async {
     final api = AmplifyAPI(modelProvider: ModelProvider.instance);
     await Amplify.addPlugin(api);
