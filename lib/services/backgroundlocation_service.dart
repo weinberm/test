@@ -5,9 +5,9 @@ import '../models/Coordinate.dart';
 
 import 'package:location/location.dart';
 
-class BackgroundLocationUtils {
-  static final BackgroundLocationUtils _instance =
-      BackgroundLocationUtils._internal();
+class BackgroundLocationService {
+  static final BackgroundLocationService _instance =
+      BackgroundLocationService._internal();
 
   int _counter = 0; // Der Counter
   Timer? _locationTimer; // Timer für die Position
@@ -22,9 +22,9 @@ class BackgroundLocationUtils {
 
   Function(Coordinate)? onNewCoordinate;
 
-  BackgroundLocationUtils._internal();
+  BackgroundLocationService._internal();
 
-  factory BackgroundLocationUtils() {
+  factory BackgroundLocationService() {
     return _instance;
   }
 
