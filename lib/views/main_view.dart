@@ -91,10 +91,10 @@ class MainView extends StatelessWidget {
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          FloatingActionButton(
-            onPressed: viewModel.incrementCounter,
-            child: Icon(Icons.abc),
-          ),
+          // FloatingActionButton(
+          //   onPressed: viewModel.incrementCounter,
+          //   child: Icon(Icons.abc),
+          // ),
           // SizedBox(
           //   height: 10,
           // ),
