@@ -7,9 +7,8 @@ import 'package:flutter_map/flutter_map.dart' as fm;
 import 'package:latlong2/latlong.dart';
 
 class MapTabView extends StatelessWidget {
-  const MapTabView({required this.mainViewModel, required this.mapViewModel});
+  const MapTabView({required this.mapViewModel});
 
-  final MainViewModel mainViewModel;
   final MapViewModel mapViewModel;
 
   @override
