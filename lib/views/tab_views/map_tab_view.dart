@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:waste_walking_ba/viewmodels/main_viewmodel.dart';
 import 'package:waste_walking_ba/viewmodels/map_viewmodel.dart';
 
 import 'package:flutter_map/flutter_map.dart' as fm;
@@ -24,7 +23,11 @@ class MapTabView extends StatelessWidget {
         children: [
           fm.FlutterMap(
             mapController: mapViewModel.controller,
-            options: fm.MapOptions(center: LatLng(48.7902398, 9.1830674)),
+            options: fm.MapOptions(
+              center: LatLng(48.7902398, 9.1830674),
+              onPositionChanged: (position, hasGesture) =>
+                  mapViewModel.onPositionChanged(position, hasGesture),
+            ),
             nonRotatedChildren: [
               fm.RichAttributionWidget(
                 attributions: [
@@ -55,7 +58,7 @@ class MapTabView extends StatelessWidget {
               children: [
                 Container(
                   child: ElevatedButton(
-                    onPressed: mapViewModel.startTracking,
+                    onPressed: mapViewModel.toggleTracking,
                     child: Icon(mapViewModel.trackingActive
                         ? Icons.stop_circle
                         : Icons.play_circle),
@@ -64,10 +67,10 @@ class MapTabView extends StatelessWidget {
                 SizedBox(height: 10),
                 Container(
                   child: ElevatedButton(
-                    onPressed: mapViewModel.toggleLockPosition,
-                    child: Icon(mapViewModel.lockPosition
-                        ? Icons.location_searching
-                        : Icons.gps_off),
+                    onPressed: mapViewModel.lockPosition,
+                    child: Icon(mapViewModel.lockPositionValue
+                        ? Icons.gps_off
+                        : Icons.location_searching),
                   ),
                 ),
                 SizedBox(height: 10),
