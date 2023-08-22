@@ -14,8 +14,27 @@ class MapViewModel extends ChangeNotifier {
 
   MapController controller = MapController();
 
-  fm.Polyline currentWasteWalkRoute = fm.Polyline(points: []);
+  fm.Polyline currentWasteWalkRoute = fm.Polyline(
+      points: [],
+      color: Colors.green,
+      strokeWidth: 6,
+      borderStrokeWidth: 6,
+      borderColor: Colors.green);
   List<fm.Polyline> wasteWalkRoutes = [];
+
+  fm.Marker currentPosMarker = fm.Marker(
+    point: LatLng(0, 0),
+    width: 10,
+    height: 10,
+    builder: (context) => Icon(Icons.my_location),
+  );
+  fm.Marker startPosMarker = fm.Marker(
+    point: LatLng(0, 0),
+    width: 10,
+    height: 10,
+    builder: (context) => Icon(Icons.start),
+  );
+
   List<fm.Marker> markers = [];
 
   bool trackingActive = false;
@@ -28,24 +47,63 @@ class MapViewModel extends ChangeNotifier {
 
   String formattedDuration = "0:00:00";
 
+  double _currentZoom = 16;
+
+  late Coordinate lastCoordinate;
+
   MapViewModel() {
-    print("Init");
     backgroundLocationService.initBackgroundLocation();
     backgroundLocationService.onNewCoordinate =
         (p0) => proccessNewCoordinate(p0);
     backgroundLocationService.startLocationTimer();
+
+    markers.add(currentPosMarker);
+    wasteWalkRoutes.add(currentWasteWalkRoute);
   }
 
   void proccessNewCoordinate(Coordinate newCoordinate) {
-    print("Callback Func");
-    print(newCoordinate);
+    if (trackingActive) {
+      wasteWalkRoutes.remove(currentWasteWalkRoute);
+      currentWasteWalkRoute.points
+          .add(LatLng(newCoordinate.latitude!, newCoordinate.longtitude!));
+      wasteWalkRoutes.add(currentWasteWalkRoute);
+      print(currentWasteWalkRoute.points);
+    }
+    if (lockPositionValue) {
+      controller.move(
+          LatLng(newCoordinate.latitude!, newCoordinate.longtitude!),
+          _currentZoom);
+    }
+
+    markers.remove(currentPosMarker);
+    currentPosMarker = fm.Marker(
+      point: LatLng(newCoordinate.latitude!, newCoordinate.longtitude!),
+      width: 10,
+      height: 10,
+      builder: (context) => Icon(Icons.my_location),
+    );
+    markers.add(currentPosMarker);
+
+    lastCoordinate = newCoordinate;
+    notifyListeners();
   }
 
   void toggleTracking() {
     if (!trackingActive) {
       startTimer();
+      print(lastCoordinate);
+      startPosMarker = fm.Marker(
+        point: LatLng(lastCoordinate.latitude!, lastCoordinate.longtitude!),
+        width: 10,
+        height: 10,
+        builder: (context) => Icon(Icons.start),
+      );
+      markers.add(startPosMarker);
     } else {
       stopTimer();
+      markers.remove(startPosMarker);
+      wasteWalkRoutes.remove(currentWasteWalkRoute);
+      currentWasteWalkRoute.points.clear();
     }
     trackingActive = !trackingActive;
     notifyListeners();
@@ -61,7 +119,6 @@ class MapViewModel extends ChangeNotifier {
     final currentTime = DateTime.now();
     difference = currentTime.difference(startTime);
     formattedDuration = difference.toString().split('.')[0];
-    print(formattedDuration + "New");
     notifyListeners();
   }
 
@@ -88,13 +145,14 @@ class MapViewModel extends ChangeNotifier {
   }
 
   void onPositionChanged(MapPosition position, bool hasGesture) {
-    if (lockPositionValue) {
+    if (lockPositionValue && hasGesture) {
       unlockPosition();
     }
-    print("Center: ${position.center!.latitude} ${position.center!.longitude}");
-    print("Zoom: ${position.zoom}");
-    print(
-        "Bounds: N${position.bounds!.north} E${position.bounds!.east} S${position.bounds!.south} W${position.bounds!.west}");
-    print("Has Gesture: $hasGesture");
+    _currentZoom = position.zoom!;
+    // print("Center: ${position.center!.latitude} ${position.center!.longitude}");
+    // print("Zoom: ${position.zoom}");
+    // print(
+    //     "Bounds: N${position.bounds!.north} E${position.bounds!.east} S${position.bounds!.south} W${position.bounds!.west}");
+    // print("Has Gesture: $hasGesture");
   }
 }
