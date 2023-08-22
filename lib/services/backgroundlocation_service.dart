@@ -23,7 +23,7 @@ class BackgroundLocationService {
   late Timer _locationTimer; // Timer für die Position
 
   void startLocationTimer() {
-    const duration = Duration(seconds: 10);
+    const duration = Duration(seconds: 5);
     _locationTimer = Timer.periodic(duration, _updateLocationTimer);
   }
 

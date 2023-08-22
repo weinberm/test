@@ -42,12 +42,12 @@ class MapTabView extends StatelessWidget {
                 urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                 userAgentPackageName: 'com.example.app',
               ),
-              // fm.MarkerLayer(
-              //   markers: [marker],
-              // ),
-              // fm.PolylineLayer(
-              //   polylines: [line],
-              // )
+              fm.PolylineLayer(
+                polylines: [mapViewModel.currentWasteWalkRoute],
+              ),
+              fm.MarkerLayer(
+                markers: mapViewModel.markers,
+              ),
             ],
           ),
           Positioned(
