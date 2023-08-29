@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:waste_walking_ba/viewmodels/main_viewmodel.dart';
+import 'package:waste_walking_ba/viewmodels/map_viewmodel.dart';
 import 'package:waste_walking_ba/views/main_view.dart';
 import 'package:provider/provider.dart';
 
@@ -18,12 +19,17 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: ChangeNotifierProvider(
-        create: (context) => MainViewModel(),
+      home: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => MainViewModel()),
+          ChangeNotifierProvider(create: (context) => MapViewModel()),
+        ],
         builder: (context, child) {
           return MainView(
-              viewModel: Provider.of<MainViewModel>(context),
-              title: "Waste Walking Demo");
+            mainViewModel: Provider.of<MainViewModel>(context),
+            mapViewModel: Provider.of<MapViewModel>(context),
+            title: "Waste Walking Demo",
+          );
         },
       ),
     );
