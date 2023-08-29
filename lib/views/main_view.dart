@@ -68,12 +68,27 @@
 
 import 'package:flutter/material.dart';
 import 'package:waste_walking_ba/viewmodels/main_viewmodel.dart';
+import 'package:waste_walking_ba/viewmodels/map_viewmodel.dart';
+import 'package:waste_walking_ba/viewmodels/history_viewmodel.dart';
+
 import 'package:waste_walking_ba/widgets/bottom_navbar.dart';
 
-class MainView extends StatelessWidget {
-  const MainView({required this.viewModel, required this.title});
+import 'package:waste_walking_ba/views/tab_views/community_tab_view.dart';
+import 'package:waste_walking_ba/views/tab_views/history_tab_view.dart';
+import 'package:waste_walking_ba/views/tab_views/leaderboard_tab_view.dart';
+import 'package:waste_walking_ba/views/tab_views/map_tab_view.dart';
+import 'package:waste_walking_ba/views/tab_views/profile_tab_view.dart';
 
-  final MainViewModel viewModel;
+import 'package:provider/provider.dart';
+
+class MainView extends StatelessWidget {
+  const MainView(
+      {required this.mainViewModel,
+      required this.mapViewModel,
+      required this.title});
+
+  final MainViewModel mainViewModel;
+  final MapViewModel mapViewModel;
   final String title;
 
   @override
@@ -84,27 +99,41 @@ class MainView extends StatelessWidget {
         title: Text(title),
       ),
       bottomNavigationBar: BottomNavBar(
-        selectedIndex: viewModel.selectedIndex,
-        onItemTapped: viewModel.changeTabIndex,
+        selectedIndex: mainViewModel.selectedIndex,
+        onItemTapped: mainViewModel.changeTabIndex,
       ),
-      body: viewModel.getTabAtIndex(viewModel),
+      body: _buildTabBody(mainViewModel),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          // FloatingActionButton(
-          //   onPressed: viewModel.incrementCounter,
-          //   child: Icon(Icons.abc),
-          // ),
-          // SizedBox(
-          //   height: 10,
-          // ),
-          // FloatingActionButton(
-          //   onPressed: viewModel.test,
-          //   child:
-          //       Icon(viewModel.started ? Icons.stop_circle : Icons.play_circle),
-          // )
+          // Weitere FloatingActionButton Widgets hier
         ],
       ),
     );
+  }
+
+  Widget _buildTabBody(MainViewModel mainViewModel) {
+    switch (mainViewModel.selectedIndex) {
+      case 0:
+        return CommunityTabView();
+      case 1:
+        return LeaderboardTabView();
+      case 2:
+        return MapTabView(mapViewModel: mapViewModel);
+      case 3:
+        return ChangeNotifierProvider(
+          create: (context) => HistoryViewModel(),
+          builder: (context, child) {
+            return HistoryTabView(
+              historyViewModel: Provider.of<HistoryViewModel>(context),
+              mainViewModel: mainViewModel,
+            );
+          },
+        );
+      case 4:
+        return ProfileTabView();
+      default:
+        return Container();
+    }
   }
 }
