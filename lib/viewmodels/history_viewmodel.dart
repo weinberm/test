@@ -1,3 +1,9 @@
 import 'package:flutter/material.dart';
 
-class HistoryViewModel extends ChangeNotifier {}
+import '../models/Record.dart';
+
+class HistoryViewModel extends ChangeNotifier {
+  HistoryViewModel() {
+    print("ReRendered");
+  }
+}
