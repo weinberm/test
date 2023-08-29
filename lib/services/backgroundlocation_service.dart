@@ -1,8 +1,6 @@
 // import 'package:background_location/background_location.dart';
 import 'dart:async';
-
 import '../models/Coordinate.dart';
-
 import 'package:location/location.dart';
 
 class BackgroundLocationService {
