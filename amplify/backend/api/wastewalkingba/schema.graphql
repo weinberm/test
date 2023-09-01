@@ -1,0 +1,11 @@
+type Coordinate {
+  longtitude: Float
+  latitude: Float
+}
+
+type Record @model @auth(rules: [{allow: public}]) {
+  coordinates: [Coordinate]
+  date: String
+  user_id: String!
+}
+ 

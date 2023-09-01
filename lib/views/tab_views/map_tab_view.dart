@@ -60,16 +60,18 @@ class MapTabView extends StatelessWidget {
               children: [
                 Container(
                   child: ElevatedButton(
-                    onPressed: () {
-                      if (!mapViewModel.trackingActive) {
+                    onPressed: () async {
+                      await mapViewModel.amplifyService.isUserSignedIn();
+                      if (!mapViewModel.amplifyService.signedIn) {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return CustomDialog(
-                              text: 'Möchten Sie fortfahren?',
+                              text:
+                                  'Sie müssen sich anmelden um diese Funktion nutzen zu können.',
                               onPositiveButtonPressed: () {
                                 // Hier kannst du die Aktion für den positiven Button definieren
-                                mapViewModel.toggleTracking();
+                                mapViewModel.amplifyService.signInUser();
                                 Navigator.pop(context); // Dialog schließen
                               },
                               onNegativeButtonPressed: () {
@@ -80,23 +82,43 @@ class MapTabView extends StatelessWidget {
                           },
                         );
                       } else {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return CustomDialog(
-                              text: 'Möchten Sie beenden?',
-                              onPositiveButtonPressed: () {
-                                // Hier kannst du die Aktion für den positiven Button definieren
-                                mapViewModel.toggleTracking();
-                                Navigator.pop(context); // Dialog schließen
-                              },
-                              onNegativeButtonPressed: () {
-                                // Hier kannst du die Aktion für den negativen Button definieren
-                                Navigator.pop(context); // Dialog schließen
-                              },
-                            );
-                          },
-                        );
+                        if (!mapViewModel.trackingActive) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return CustomDialog(
+                                text: 'Möchten Sie fortfahren?',
+                                onPositiveButtonPressed: () {
+                                  // Hier kannst du die Aktion für den positiven Button definieren
+                                  mapViewModel.toggleTracking();
+                                  Navigator.pop(context); // Dialog schließen
+                                },
+                                onNegativeButtonPressed: () {
+                                  // Hier kannst du die Aktion für den negativen Button definieren
+                                  Navigator.pop(context); // Dialog schließen
+                                },
+                              );
+                            },
+                          );
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return CustomDialog(
+                                text: 'Möchten Sie beenden?',
+                                onPositiveButtonPressed: () {
+                                  // Hier kannst du die Aktion für den positiven Button definieren
+                                  mapViewModel.toggleTracking();
+                                  Navigator.pop(context); // Dialog schließen
+                                },
+                                onNegativeButtonPressed: () {
+                                  // Hier kannst du die Aktion für den negativen Button definieren
+                                  Navigator.pop(context); // Dialog schließen
+                                },
+                              );
+                            },
+                          );
+                        }
                       }
                     },
                     child: Icon(mapViewModel.trackingActive

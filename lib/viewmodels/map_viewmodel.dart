@@ -7,11 +7,17 @@ import '../models/Coordinate.dart';
 import 'package:waste_walking_ba/services/backgroundlocation_service.dart';
 import 'dart:async';
 
+import 'package:waste_walking_ba/services/amplify_record_service.dart';
+import '../services/amplify_auth_service.dart';
+
 // Definiere die ViewModel-Klasse für die Kartenansicht
 class MapViewModel extends ChangeNotifier {
   /// Initialisiere den Hintergrundortungsdienst für die Kartenansicht
   final BackgroundLocationService backgroundLocationService =
       BackgroundLocationService();
+
+  AmplifyAuthService amplifyService = AmplifyAuthService();
+  AmplifyRecordService amplifyRecordService = AmplifyRecordService();
 
   /// Erstelle eine Kartencontroller-Instanz
   MapController controller = MapController();
@@ -58,6 +64,8 @@ class MapViewModel extends ChangeNotifier {
 
   late Coordinate lastCoordinate; // Die zuletzt erfasste Koordinate
 
+  List<Coordinate> currentWasteWalkCoordinates = [];
+
   MapViewModel() {
     /// Initialisiere den Hintergrundortungsdienst und setze Callbacks
     backgroundLocationService.initBackgroundLocation();
@@ -77,6 +85,7 @@ class MapViewModel extends ChangeNotifier {
       currentWasteWalkRoute.points
           .add(LatLng(newCoordinate.latitude!, newCoordinate.longtitude!));
       wasteWalkRoutes.add(currentWasteWalkRoute);
+      currentWasteWalkCoordinates.add(newCoordinate);
     }
 
     /// Zentriere die Karte auf die aktuelle Position, wenn die Positionssperre aktiv ist
@@ -101,7 +110,7 @@ class MapViewModel extends ChangeNotifier {
   }
 
   /// Funktion zum Aktivieren/Deaktivieren der Verfolgung
-  void toggleTracking() {
+  void toggleTracking() async {
     if (!trackingActive) {
       startTimer();
       startPosMarker = fm.Marker(
@@ -116,6 +125,11 @@ class MapViewModel extends ChangeNotifier {
       markers.remove(startPosMarker);
       wasteWalkRoutes.remove(currentWasteWalkRoute);
       currentWasteWalkRoute.points.clear();
+
+      String userId = await amplifyService.getCurrentUserId();
+      amplifyRecordService.createRecord(currentWasteWalkCoordinates, userId);
+
+      currentWasteWalkCoordinates.clear();
     }
     trackingActive = !trackingActive;
     notifyListeners();
