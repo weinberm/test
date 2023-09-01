@@ -37,8 +37,12 @@ class AmplifyAuthService {
 
   Future<AuthUser> getCurrentUser() async {
     final user = await Amplify.Auth.getCurrentUser();
-    print(user);
     return user;
+  }
+
+  Future<String> getCurrentUserId() async {
+    final user = await Amplify.Auth.getCurrentUser();
+    return user.userId;
   }
 
   Future<void> signInWithWebUI() async {

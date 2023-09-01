@@ -30,7 +30,7 @@ class Record extends amplify_core.Model {
   final String id;
   final List<Coordinate>? _coordinates;
   final String? _date;
-  final int? _user_id;
+  final String? _user_id;
   final amplify_core.TemporalDateTime? _createdAt;
   final amplify_core.TemporalDateTime? _updatedAt;
 
@@ -55,8 +55,17 @@ class Record extends amplify_core.Model {
     return _date;
   }
   
-  int? get user_id {
-    return _user_id;
+  String get user_id {
+    try {
+      return _user_id!;
+    } catch(e) {
+      throw amplify_core.AmplifyCodeGenModelException(
+          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
   amplify_core.TemporalDateTime? get createdAt {
@@ -67,9 +76,9 @@ class Record extends amplify_core.Model {
     return _updatedAt;
   }
   
-  const Record._internal({required this.id, coordinates, date, user_id, createdAt, updatedAt}): _coordinates = coordinates, _date = date, _user_id = user_id, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Record._internal({required this.id, coordinates, date, required user_id, createdAt, updatedAt}): _coordinates = coordinates, _date = date, _user_id = user_id, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Record({String? id, List<Coordinate>? coordinates, String? date, int? user_id}) {
+  factory Record({String? id, List<Coordinate>? coordinates, String? date, required String user_id}) {
     return Record._internal(
       id: id == null ? amplify_core.UUID.getUUID() : id,
       coordinates: coordinates != null ? List<Coordinate>.unmodifiable(coordinates) : coordinates,
@@ -102,7 +111,7 @@ class Record extends amplify_core.Model {
     buffer.write("id=" + "$id" + ", ");
     buffer.write("coordinates=" + (_coordinates != null ? _coordinates!.toString() : "null") + ", ");
     buffer.write("date=" + "$_date" + ", ");
-    buffer.write("user_id=" + (_user_id != null ? _user_id!.toString() : "null") + ", ");
+    buffer.write("user_id=" + "$_user_id" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -110,7 +119,7 @@ class Record extends amplify_core.Model {
     return buffer.toString();
   }
   
-  Record copyWith({List<Coordinate>? coordinates, String? date, int? user_id}) {
+  Record copyWith({List<Coordinate>? coordinates, String? date, String? user_id}) {
     return Record._internal(
       id: id,
       coordinates: coordinates ?? this.coordinates,
@@ -121,7 +130,7 @@ class Record extends amplify_core.Model {
   Record copyWithModelFieldValues({
     ModelFieldValue<List<Coordinate>?>? coordinates,
     ModelFieldValue<String?>? date,
-    ModelFieldValue<int?>? user_id
+    ModelFieldValue<String>? user_id
   }) {
     return Record._internal(
       id: id,
@@ -140,7 +149,7 @@ class Record extends amplify_core.Model {
           .toList()
         : null,
       _date = json['date'],
-      _user_id = (json['user_id'] as num?)?.toInt(),
+      _user_id = json['user_id'],
       _createdAt = json['createdAt'] != null ? amplify_core.TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? amplify_core.TemporalDateTime.fromString(json['updatedAt']) : null;
   
@@ -166,6 +175,17 @@ class Record extends amplify_core.Model {
     modelSchemaDefinition.name = "Record";
     modelSchemaDefinition.pluralName = "Records";
     
+    modelSchemaDefinition.authRules = [
+      amplify_core.AuthRule(
+        authStrategy: amplify_core.AuthStrategy.PUBLIC,
+        operations: const [
+          amplify_core.ModelOperation.CREATE,
+          amplify_core.ModelOperation.UPDATE,
+          amplify_core.ModelOperation.DELETE,
+          amplify_core.ModelOperation.READ
+        ])
+    ];
+    
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.id());
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
@@ -183,8 +203,8 @@ class Record extends amplify_core.Model {
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
       key: Record.USER_ID,
-      isRequired: false,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.int)
+      isRequired: true,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.nonQueryField(
