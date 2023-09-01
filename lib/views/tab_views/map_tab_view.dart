@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:waste_walking_ba/viewmodels/map_viewmodel.dart';
-
 import 'package:flutter_map/flutter_map.dart' as fm;
 import 'package:latlong2/latlong.dart';
+
+import 'package:waste_walking_ba/viewmodels/map_viewmodel.dart';
+
+import '../../widgets/dialog.dart';
 
 class MapTabView extends StatelessWidget {
   const MapTabView({required this.mapViewModel});
@@ -58,7 +60,45 @@ class MapTabView extends StatelessWidget {
               children: [
                 Container(
                   child: ElevatedButton(
-                    onPressed: mapViewModel.toggleTracking,
+                    onPressed: () {
+                      if (!mapViewModel.trackingActive) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CustomDialog(
+                              text: 'Möchten Sie fortfahren?',
+                              onPositiveButtonPressed: () {
+                                // Hier kannst du die Aktion für den positiven Button definieren
+                                mapViewModel.toggleTracking();
+                                Navigator.pop(context); // Dialog schließen
+                              },
+                              onNegativeButtonPressed: () {
+                                // Hier kannst du die Aktion für den negativen Button definieren
+                                Navigator.pop(context); // Dialog schließen
+                              },
+                            );
+                          },
+                        );
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CustomDialog(
+                              text: 'Möchten Sie beenden?',
+                              onPositiveButtonPressed: () {
+                                // Hier kannst du die Aktion für den positiven Button definieren
+                                mapViewModel.toggleTracking();
+                                Navigator.pop(context); // Dialog schließen
+                              },
+                              onNegativeButtonPressed: () {
+                                // Hier kannst du die Aktion für den negativen Button definieren
+                                Navigator.pop(context); // Dialog schließen
+                              },
+                            );
+                          },
+                        );
+                      }
+                    },
                     child: Icon(mapViewModel.trackingActive
                         ? Icons.stop_circle
                         : Icons.play_circle),
