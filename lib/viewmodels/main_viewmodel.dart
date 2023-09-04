@@ -7,7 +7,8 @@ class MainViewModel extends ChangeNotifier {
   int selectedIndex = 2;
 
   AmplifyAuthService amplifyService = AmplifyAuthService();
-  AmplifyRecordService amplifyRecordService = AmplifyRecordService();
+  AmplifyWasteWalkRecordService amplifyWasteWalkRecordService =
+      AmplifyWasteWalkRecordService();
 
   void changeTabIndex(int index) {
     selectedIndex = index;

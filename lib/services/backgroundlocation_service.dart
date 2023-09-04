@@ -34,6 +34,15 @@ class BackgroundLocationService {
     });
   }
 
+  Future<Coordinate> getCurrentPosition() async {
+    final location = await BackgroundLocation().getCurrentLocation();
+    final newCord = Coordinate(
+      longtitude: location.longitude,
+      latitude: location.latitude,
+    );
+    return newCord;
+  }
+
   void stopLocationTimer() {
     _locationTimer.cancel();
   }

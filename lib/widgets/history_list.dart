@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:waste_walking_ba/widgets/history_listitem.dart';
 
+import '../models/WasteWalkRecord.dart';
+
 class HistoryList extends StatelessWidget {
-  final List<String> records;
+  final List<WasteWalkRecord> records;
 
   HistoryList({required this.records});
 
@@ -19,7 +21,7 @@ class HistoryList extends StatelessWidget {
                 print('Item clicked: ${records[index]}');
               },
               child: HistoryListItem(
-                text: records[index],
+                text: records[index].id,
               ),
             );
           },
