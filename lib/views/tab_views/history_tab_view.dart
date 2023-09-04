@@ -10,33 +10,10 @@ class HistoryTabView extends StatelessWidget {
   final MainViewModel mainViewModel;
   final HistoryViewModel historyViewModel;
 
-  final List<String> items = [
-    'Element 1',
-    'Element 2',
-    'Element 3',
-    'Element 4',
-    'Element 5',
-    'Element 1',
-    'Element 2',
-    'Element 3',
-    'Element 4',
-    'Element 5',
-    'Element 1',
-    'Element 2',
-    'Element 3',
-    'Element 4',
-    'Element 5',
-    'Element 1',
-    'Element 2',
-    'Element 3',
-    'Element 4',
-    'Element 5',
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: HistoryList(records: items),
+      child: HistoryList(records: historyViewModel.recordHistory),
     );
   }
 }

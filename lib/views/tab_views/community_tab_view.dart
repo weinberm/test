@@ -27,7 +27,8 @@ class CommunityTabView extends StatelessWidget {
             onPressed: mainViewModel.amplifyService.getCurrentUser,
             child: Text("Get USer ")),
         TextButton(
-            onPressed: mainViewModel.amplifyRecordService.queryListItems,
+            onPressed:
+                mainViewModel.amplifyWasteWalkRecordService.queryListItems,
             child: Text("Fetch ")),
         Text(mainViewModel.amplifyService.signedIn.toString()),
         Center(

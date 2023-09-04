@@ -7,28 +7,45 @@ import 'package:waste_walking_ba/viewmodels/map_viewmodel.dart';
 
 import '../../widgets/dialog.dart';
 
-class MapTabView extends StatelessWidget {
-  const MapTabView({required this.mapViewModel});
-
+class MapTabView extends StatefulWidget {
   final MapViewModel mapViewModel;
+
+  MapTabView({required this.mapViewModel});
+
+  @override
+  _MapTabViewState createState() => _MapTabViewState();
+}
+
+class _MapTabViewState extends State<MapTabView> {
+  @override
+  void dispose() {
+    widget.mapViewModel.onWidgetDisposed();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    widget.mapViewModel.onWidgetInit();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: mapViewModel.trackingActive
+      appBar: widget.mapViewModel.trackingActive
           ? AppBar(
               title: Center(
                   child: Text(
-                      '${mapViewModel.formattedDuration}            0.00 km')))
+                      '${widget.mapViewModel.formattedDuration}            0.00 km')))
           : null, // Hier füge die AppBar hinzu
       body: Stack(
         children: [
           fm.FlutterMap(
-            mapController: mapViewModel.controller,
+            mapController: widget.mapViewModel.mapData.mapController,
             options: fm.MapOptions(
               center: LatLng(48.7902398, 9.1830674),
               onPositionChanged: (position, hasGesture) =>
-                  mapViewModel.onPositionChanged(position, hasGesture),
+                  widget.mapViewModel.onPositionChanged(position, hasGesture),
             ),
             nonRotatedChildren: [
               fm.RichAttributionWidget(
@@ -45,10 +62,10 @@ class MapTabView extends StatelessWidget {
                 userAgentPackageName: 'com.example.app',
               ),
               fm.PolylineLayer(
-                polylines: [mapViewModel.currentWasteWalkRoute],
+                polylines: widget.mapViewModel.mapData.wasteWalkRoutes,
               ),
               fm.MarkerLayer(
-                markers: mapViewModel.markers,
+                markers: widget.mapViewModel.mapData.markers,
               ),
             ],
           ),
@@ -61,8 +78,8 @@ class MapTabView extends StatelessWidget {
                 Container(
                   child: ElevatedButton(
                     onPressed: () async {
-                      await mapViewModel.amplifyService.isUserSignedIn();
-                      if (!mapViewModel.amplifyService.signedIn) {
+                      await widget.mapViewModel.amplifyService.isUserSignedIn();
+                      if (!widget.mapViewModel.amplifyService.signedIn) {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -71,7 +88,7 @@ class MapTabView extends StatelessWidget {
                                   'Sie müssen sich anmelden um diese Funktion nutzen zu können.',
                               onPositiveButtonPressed: () {
                                 // Hier kannst du die Aktion für den positiven Button definieren
-                                mapViewModel.amplifyService.signInUser();
+                                widget.mapViewModel.amplifyService.signInUser();
                                 Navigator.pop(context); // Dialog schließen
                               },
                               onNegativeButtonPressed: () {
@@ -82,7 +99,7 @@ class MapTabView extends StatelessWidget {
                           },
                         );
                       } else {
-                        if (!mapViewModel.trackingActive) {
+                        if (!widget.mapViewModel.trackingActive) {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -90,7 +107,7 @@ class MapTabView extends StatelessWidget {
                                 text: 'Möchten Sie fortfahren?',
                                 onPositiveButtonPressed: () {
                                   // Hier kannst du die Aktion für den positiven Button definieren
-                                  mapViewModel.toggleTracking();
+                                  widget.mapViewModel.startTracking();
                                   Navigator.pop(context); // Dialog schließen
                                 },
                                 onNegativeButtonPressed: () {
@@ -108,7 +125,7 @@ class MapTabView extends StatelessWidget {
                                 text: 'Möchten Sie beenden?',
                                 onPositiveButtonPressed: () {
                                   // Hier kannst du die Aktion für den positiven Button definieren
-                                  mapViewModel.toggleTracking();
+                                  widget.mapViewModel.stopTracking();
                                   Navigator.pop(context); // Dialog schließen
                                 },
                                 onNegativeButtonPressed: () {
@@ -121,7 +138,7 @@ class MapTabView extends StatelessWidget {
                         }
                       }
                     },
-                    child: Icon(mapViewModel.trackingActive
+                    child: Icon(widget.mapViewModel.trackingActive
                         ? Icons.stop_circle
                         : Icons.play_circle),
                   ),
@@ -129,8 +146,13 @@ class MapTabView extends StatelessWidget {
                 SizedBox(height: 10),
                 Container(
                   child: ElevatedButton(
-                    onPressed: mapViewModel.lockPosition,
-                    child: Icon(mapViewModel.lockPositionValue
+                    onPressed: () => {
+                      if (widget.mapViewModel.lockPositionValue)
+                        {widget.mapViewModel.unlockPosition()}
+                      else
+                        {widget.mapViewModel.lockPosition()}
+                    },
+                    child: Icon(widget.mapViewModel.lockPositionValue
                         ? Icons.gps_off
                         : Icons.location_searching),
                   ),
@@ -139,8 +161,8 @@ class MapTabView extends StatelessWidget {
                 Container(
                     child: Center(
                   child: ElevatedButton(
-                    onPressed: mapViewModel.toggleHideOtherWalks,
-                    child: Icon(mapViewModel.hideOtherWalks
+                    onPressed: widget.mapViewModel.toggleHideOtherWalks,
+                    child: Icon(widget.mapViewModel.hideOtherWalks
                         ? Icons.layers
                         : Icons.layers_clear),
                   ),

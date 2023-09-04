@@ -3,7 +3,7 @@ type Coordinate {
   latitude: Float
 }
 
-type Record @model @auth(rules: [{allow: public}]) {
+type WasteWalkRecord @model @auth(rules: [{allow: public}]) {
   coordinates: [Coordinate]
   date: String
   user_id: String!

@@ -3,15 +3,15 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import '../models/ModelProvider.dart';
 import '../amplifyconfiguration.dart';
 
-class AmplifyRecordService {
-  static final AmplifyRecordService _instance =
-      AmplifyRecordService._internal();
+class AmplifyWasteWalkRecordService {
+  static final AmplifyWasteWalkRecordService _instance =
+      AmplifyWasteWalkRecordService._internal();
 
-  factory AmplifyRecordService() {
+  factory AmplifyWasteWalkRecordService() {
     return _instance;
   }
 
-  AmplifyRecordService._internal() {
+  AmplifyWasteWalkRecordService._internal() {
     _configureAmplify();
   }
 
@@ -26,9 +26,10 @@ class AmplifyRecordService {
     }
   }
 
-  Future<void> createRecord(List<Coordinate> coordinates, String userId) async {
+  Future<void> createWasteWalkRecord(
+      List<Coordinate> coordinates, String userId) async {
     try {
-      final record = Record(
+      final record = WasteWalkRecord(
         date: DateTime.now().toString(),
         coordinates: coordinates,
         user_id: userId,
@@ -47,21 +48,20 @@ class AmplifyRecordService {
     }
   }
 
-  Future<List<Record?>> queryListItems() async {
+  Future<List<WasteWalkRecord?>> queryListItems() async {
     try {
-      final request = ModelQueries.list(Record.classType);
+      final request = ModelQueries.list(WasteWalkRecord.classType);
       final response = await Amplify.API.query(request: request).response;
 
-      final records = response.data?.items;
-      print(records);
-      if (records == null) {
-        safePrint('errors: ${response.errors}');
-        return const [];
+      final items = response.data?.items;
+      if (items == null) {
+        print('errors: ${response.errors}');
+        return <WasteWalkRecord?>[];
       }
-      return records;
+      return items;
     } on ApiException catch (e) {
-      safePrint('Query failed: $e');
-      return const [];
+      print('Query failed: $e');
     }
+    return <WasteWalkRecord?>[];
   }
 }
