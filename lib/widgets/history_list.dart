@@ -18,10 +18,10 @@ class HistoryList extends StatelessWidget {
             return GestureDetector(
               onTap: () {
                 // Handle item click here
-                print('Item clicked: ${records[index]}');
+                print('Item clicked: ${records[index].id}');
               },
               child: HistoryListItem(
-                text: records[index].id,
+                record: records[index],
               ),
             );
           },
