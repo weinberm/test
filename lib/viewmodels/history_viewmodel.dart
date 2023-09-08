@@ -24,5 +24,7 @@ class HistoryViewModel extends ChangeNotifier {
         .map((record) => record!)
         .toList();
     print(recordHistory);
+    print(recordHistory.length);
+    notifyListeners();
   }
 }

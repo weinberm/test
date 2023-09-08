@@ -51,7 +51,7 @@ class MapViewModel extends ChangeNotifier {
 
     Coordinate currentPos =
         await backgroundLocationService.getCurrentPosition();
-    print(currentPos);
+
     mapData.setCurrentPosMarker(currentPos);
     mapData.changeMapCenter(currentPos);
 
