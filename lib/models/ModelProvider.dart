@@ -22,17 +22,19 @@
 import 'package:amplify_core/amplify_core.dart' as amplify_core;
 import 'WasteWalkRecord.dart';
 import 'Coordinate.dart';
+import 'WasteWalkMapBorder.dart';
 
 export 'Coordinate.dart';
+export 'WasteWalkMapBorder.dart';
 export 'WasteWalkRecord.dart';
 
 class ModelProvider implements amplify_core.ModelProviderInterface {
   @override
-  String version = "b2c07f64828b05c51e3c501f28161518";
+  String version = "58e14b78f1a9ddfe960739f50939107d";
   @override
   List<amplify_core.ModelSchema> modelSchemas = [WasteWalkRecord.schema];
   @override
-  List<amplify_core.ModelSchema> customTypeSchemas = [Coordinate.schema];
+  List<amplify_core.ModelSchema> customTypeSchemas = [Coordinate.schema, WasteWalkMapBorder.schema];
   static final ModelProvider _instance = ModelProvider();
 
   static ModelProvider get instance => _instance;
