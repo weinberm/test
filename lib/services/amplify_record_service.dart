@@ -26,14 +26,14 @@ class AmplifyWasteWalkRecordService {
     }
   }
 
-  Future<void> createWasteWalkRecord(
-      List<Coordinate> coordinates, String userId) async {
+  Future<void> createWasteWalkRecord(List<Coordinate> coordinates,
+      String userId, WasteWalkMapBorder border) async {
     try {
       final record = WasteWalkRecord(
-        date: DateTime.now().toString(),
-        coordinates: coordinates,
-        user_id: userId,
-      );
+          date: DateTime.now().toString(),
+          coordinates: coordinates,
+          user_id: userId,
+          walk_border_coordinates: border);
       final request = ModelMutations.create(record);
       final response = await Amplify.API.mutate(request: request).response;
 

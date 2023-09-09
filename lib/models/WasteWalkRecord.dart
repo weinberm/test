@@ -31,6 +31,7 @@ class WasteWalkRecord extends amplify_core.Model {
   final List<Coordinate>? _coordinates;
   final String? _date;
   final String? _user_id;
+  final WasteWalkMapBorder? _walk_border_coordinates;
   final amplify_core.TemporalDateTime? _createdAt;
   final amplify_core.TemporalDateTime? _updatedAt;
 
@@ -68,6 +69,10 @@ class WasteWalkRecord extends amplify_core.Model {
     }
   }
   
+  WasteWalkMapBorder? get walk_border_coordinates {
+    return _walk_border_coordinates;
+  }
+  
   amplify_core.TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -76,14 +81,15 @@ class WasteWalkRecord extends amplify_core.Model {
     return _updatedAt;
   }
   
-  const WasteWalkRecord._internal({required this.id, coordinates, date, required user_id, createdAt, updatedAt}): _coordinates = coordinates, _date = date, _user_id = user_id, _createdAt = createdAt, _updatedAt = updatedAt;
+  const WasteWalkRecord._internal({required this.id, coordinates, date, required user_id, walk_border_coordinates, createdAt, updatedAt}): _coordinates = coordinates, _date = date, _user_id = user_id, _walk_border_coordinates = walk_border_coordinates, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory WasteWalkRecord({String? id, List<Coordinate>? coordinates, String? date, required String user_id}) {
+  factory WasteWalkRecord({String? id, List<Coordinate>? coordinates, String? date, required String user_id, WasteWalkMapBorder? walk_border_coordinates}) {
     return WasteWalkRecord._internal(
       id: id == null ? amplify_core.UUID.getUUID() : id,
       coordinates: coordinates != null ? List<Coordinate>.unmodifiable(coordinates) : coordinates,
       date: date,
-      user_id: user_id);
+      user_id: user_id,
+      walk_border_coordinates: walk_border_coordinates);
   }
   
   bool equals(Object other) {
@@ -97,7 +103,8 @@ class WasteWalkRecord extends amplify_core.Model {
       id == other.id &&
       DeepCollectionEquality().equals(_coordinates, other._coordinates) &&
       _date == other._date &&
-      _user_id == other._user_id;
+      _user_id == other._user_id &&
+      _walk_border_coordinates == other._walk_border_coordinates;
   }
   
   @override
@@ -112,6 +119,7 @@ class WasteWalkRecord extends amplify_core.Model {
     buffer.write("coordinates=" + (_coordinates != null ? _coordinates!.toString() : "null") + ", ");
     buffer.write("date=" + "$_date" + ", ");
     buffer.write("user_id=" + "$_user_id" + ", ");
+    buffer.write("walk_border_coordinates=" + (_walk_border_coordinates != null ? _walk_border_coordinates!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -119,24 +127,27 @@ class WasteWalkRecord extends amplify_core.Model {
     return buffer.toString();
   }
   
-  WasteWalkRecord copyWith({List<Coordinate>? coordinates, String? date, String? user_id}) {
+  WasteWalkRecord copyWith({List<Coordinate>? coordinates, String? date, String? user_id, WasteWalkMapBorder? walk_border_coordinates}) {
     return WasteWalkRecord._internal(
       id: id,
       coordinates: coordinates ?? this.coordinates,
       date: date ?? this.date,
-      user_id: user_id ?? this.user_id);
+      user_id: user_id ?? this.user_id,
+      walk_border_coordinates: walk_border_coordinates ?? this.walk_border_coordinates);
   }
   
   WasteWalkRecord copyWithModelFieldValues({
     ModelFieldValue<List<Coordinate>?>? coordinates,
     ModelFieldValue<String?>? date,
-    ModelFieldValue<String>? user_id
+    ModelFieldValue<String>? user_id,
+    ModelFieldValue<WasteWalkMapBorder?>? walk_border_coordinates
   }) {
     return WasteWalkRecord._internal(
       id: id,
       coordinates: coordinates == null ? this.coordinates : coordinates.value,
       date: date == null ? this.date : date.value,
-      user_id: user_id == null ? this.user_id : user_id.value
+      user_id: user_id == null ? this.user_id : user_id.value,
+      walk_border_coordinates: walk_border_coordinates == null ? this.walk_border_coordinates : walk_border_coordinates.value
     );
   }
   
@@ -150,11 +161,14 @@ class WasteWalkRecord extends amplify_core.Model {
         : null,
       _date = json['date'],
       _user_id = json['user_id'],
+      _walk_border_coordinates = json['walk_border_coordinates']?['serializedData'] != null
+        ? WasteWalkMapBorder.fromJson(new Map<String, dynamic>.from(json['walk_border_coordinates']['serializedData']))
+        : null,
       _createdAt = json['createdAt'] != null ? amplify_core.TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? amplify_core.TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'coordinates': _coordinates?.map((Coordinate? e) => e?.toJson()).toList(), 'date': _date, 'user_id': _user_id, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'coordinates': _coordinates?.map((Coordinate? e) => e?.toJson()).toList(), 'date': _date, 'user_id': _user_id, 'walk_border_coordinates': _walk_border_coordinates?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
@@ -162,6 +176,7 @@ class WasteWalkRecord extends amplify_core.Model {
     'coordinates': _coordinates,
     'date': _date,
     'user_id': _user_id,
+    'walk_border_coordinates': _walk_border_coordinates,
     'createdAt': _createdAt,
     'updatedAt': _updatedAt
   };
@@ -171,6 +186,7 @@ class WasteWalkRecord extends amplify_core.Model {
   static final COORDINATES = amplify_core.QueryField(fieldName: "coordinates");
   static final DATE = amplify_core.QueryField(fieldName: "date");
   static final USER_ID = amplify_core.QueryField(fieldName: "user_id");
+  static final WALK_BORDER_COORDINATES = amplify_core.QueryField(fieldName: "walk_border_coordinates");
   static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "WasteWalkRecord";
     modelSchemaDefinition.pluralName = "WasteWalkRecords";
@@ -205,6 +221,12 @@ class WasteWalkRecord extends amplify_core.Model {
       key: WasteWalkRecord.USER_ID,
       isRequired: true,
       ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
+      fieldName: 'walk_border_coordinates',
+      isRequired: false,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embedded, ofCustomTypeName: 'WasteWalkMapBorder')
     ));
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.nonQueryField(

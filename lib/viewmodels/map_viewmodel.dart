@@ -6,6 +6,7 @@ import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter_map/flutter_map.dart' as fm;
 import 'package:latlong2/latlong.dart';
 import 'package:waste_walking_ba/models/MapData.dart';
+import 'package:waste_walking_ba/models/ModelProvider.dart';
 import '../models/Coordinate.dart';
 import 'package:waste_walking_ba/services/backgroundlocation_service.dart';
 import 'dart:async';
@@ -38,6 +39,10 @@ class MapViewModel extends ChangeNotifier {
   String formattedDuration = "0:00:00";
 
   List<Coordinate> currentWasteWalkCoordinates = [];
+  late double top;
+  late double right;
+  late double bottom;
+  late double left;
 
   MapViewModel() : super() {
     initialize();
@@ -70,7 +75,24 @@ class MapViewModel extends ChangeNotifier {
       if (trackingActive) {
         currentWasteWalkCoordinates.add(newCoordinate);
         mapData.addPointToCurrentWasteWalkRoute(newCoordinate);
-        print(mapData.currentWasteWalkRoute.points);
+
+        if (newCoordinate.latitude! > top) {
+          top = newCoordinate.latitude!;
+        }
+        if (newCoordinate.latitude! < bottom) {
+          bottom = newCoordinate.latitude!;
+        }
+        if (newCoordinate.longtitude! > right) {
+          right = newCoordinate.longtitude!;
+        }
+        if (newCoordinate.longtitude! < left) {
+          left = newCoordinate.longtitude!;
+        }
+
+        print("Top ${top}");
+        print("Bottom ${bottom}");
+        print("left ${left}");
+        print("right ${right}");
       }
 
       mapData.setCurrentPosMarker(newCoordinate);
@@ -79,6 +101,24 @@ class MapViewModel extends ChangeNotifier {
     } else {
       if (trackingActive) {
         currentWasteWalkCoordinates.add(newCoordinate);
+
+        if (newCoordinate.latitude! > top) {
+          top = newCoordinate.latitude!;
+        }
+        if (newCoordinate.latitude! < bottom) {
+          bottom = newCoordinate.latitude!;
+        }
+        if (newCoordinate.longtitude! > right) {
+          right = newCoordinate.longtitude!;
+        }
+        if (newCoordinate.longtitude! < left) {
+          left = newCoordinate.longtitude!;
+        }
+
+        print("Top ${top}");
+        print("Bottom ${bottom}");
+        print("left ${left}");
+        print("right ${right}");
       }
     }
   }
@@ -121,6 +161,10 @@ class MapViewModel extends ChangeNotifier {
     mapData.setStartPosMarkerLocation();
     mapData.addPointToCurrentWasteWalkRoute(mapData.lastCoordinate);
     currentWasteWalkCoordinates.add(mapData.lastCoordinate);
+    top = mapData.lastCoordinate.latitude!;
+    left = mapData.lastCoordinate.longtitude!;
+    bottom = mapData.lastCoordinate.latitude!;
+    right = mapData.lastCoordinate.longtitude!;
     startTimer();
     notifyListeners();
   }
@@ -130,11 +174,18 @@ class MapViewModel extends ChangeNotifier {
     stopTimer();
     String userId = await amplifyService.getCurrentUserId();
     amplifyWasteWalkRecordService.createWasteWalkRecord(
-        currentWasteWalkCoordinates, userId);
+        currentWasteWalkCoordinates,
+        userId,
+        WasteWalkMapBorder(north: top, east: right, south: bottom, west: left));
 
     currentWasteWalkCoordinates.clear();
     mapData.currentWasteWalkRoute.points.clear();
     mapData.markers.remove(mapData.startPosMarker);
+
+    print(top);
+    print(bottom);
+    print(left);
+    print(right);
 
     notifyListeners();
   }
@@ -164,9 +215,10 @@ class MapViewModel extends ChangeNotifier {
     }
     // _currentZoom = position.zoom!;
     // // print("Center: ${position.center!.latitude} ${position.center!.longitude}");
-    // // print("Zoom: ${position.zoom}");
-    // // print(
-    // //     "Bounds: N${position.bounds!.north} E${position.bounds!.east} S${position.bounds!.south} W${position.bounds!.west}");
+    print(mapData.currentPosMarker.point);
+    print("Zoom: ${position.zoom}");
+    print(
+        "Bounds: N${position.bounds!.north} E${position.bounds!.east} S${position.bounds!.south} W${position.bounds!.west}");
     // // print("Has Gesture: $hasGesture");
   }
 }
