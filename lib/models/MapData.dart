@@ -3,10 +3,13 @@ import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter_map/flutter_map.dart' as flutterMap;
 import 'package:latlong2/latlong.dart';
 import 'package:waste_walking_ba/models/Coordinate.dart';
+import 'package:waste_walking_ba/models/ModelProvider.dart';
 
 class MapData {
   List<flutterMap.Marker> markers = [];
+
   List<flutterMap.Polyline> wasteWalkRoutes = [];
+  List<flutterMap.Polyline> otherWasteWalkRoutes = [];
 
   flutterMap.Polyline currentWasteWalkRoute = flutterMap.Polyline(
     points: [],
@@ -77,5 +80,31 @@ class MapData {
     mapController.move(
         LatLng(lastCoordinate.latitude!, lastCoordinate.longtitude!),
         currentZoom);
+  }
+
+  void removeOtherWasteWalksFromBoxView() {
+    wasteWalkRoutes.clear();
+    wasteWalkRoutes.add(currentWasteWalkRoute);
+  }
+
+  void addOtherWasteWalksToBoxView() {
+    wasteWalkRoutes.addAll(otherWasteWalkRoutes);
+  }
+
+  void setOtherWasteWalks(List<WasteWalkRecord> records) {
+    records.forEach((record) {
+      flutterMap.Polyline wasteWalkRoute = flutterMap.Polyline(
+        points: [],
+        color: Colors.red,
+        strokeWidth: 6,
+        borderStrokeWidth: 6,
+        borderColor: Colors.red,
+      );
+      record.coordinates!.forEach((element) {
+        wasteWalkRoute.points
+            .add(LatLng(element.latitude!, element.longtitude!));
+      });
+      otherWasteWalkRoutes.add(wasteWalkRoute);
+    });
   }
 }
