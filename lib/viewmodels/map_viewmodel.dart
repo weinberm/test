@@ -7,6 +7,7 @@ import 'package:flutter_map/flutter_map.dart' as fm;
 import 'package:latlong2/latlong.dart';
 import 'package:waste_walking_ba/models/MapData.dart';
 import 'package:waste_walking_ba/models/ModelProvider.dart';
+import 'package:waste_walking_ba/services/amplify_service.dart';
 import '../models/Coordinate.dart';
 import 'package:waste_walking_ba/services/backgroundlocation_service.dart';
 import 'dart:async';
@@ -20,9 +21,10 @@ class MapViewModel extends ChangeNotifier {
   final BackgroundLocationService backgroundLocationService =
       BackgroundLocationService();
 
-  AmplifyAuthService amplifyService = AmplifyAuthService();
+  AmplifyService aS = AmplifyService();
+  AmplifyAuthService amplifyService = AmplifyService().authentification;
   AmplifyWasteWalkRecordService amplifyWasteWalkRecordService =
-      AmplifyWasteWalkRecordService();
+      AmplifyService().recordService;
 
   final MapData mapData = MapData();
 
@@ -64,6 +66,10 @@ class MapViewModel extends ChangeNotifier {
 
     setNewBoxBorder(currentPos);
 
+    while (!aS.configured) {
+      print("AWS Not Config Yet");
+      await Future.delayed(const Duration(seconds: 1)); // Warte 1 Sekunde
+    }
     List<WasteWalkRecord?> wasteWalkRecords =
         await amplifyWasteWalkRecordService.queryItemsWithinBorder(
             boxBorderTop, boxBorderRight, boxBorderBottom, boxBorderLeft);

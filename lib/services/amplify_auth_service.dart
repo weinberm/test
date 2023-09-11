@@ -4,29 +4,7 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 
 class AmplifyAuthService {
-  static final AmplifyAuthService _instance = AmplifyAuthService._internal();
-
   bool signedIn = false;
-
-  factory AmplifyAuthService() {
-    return _instance;
-  }
-
-  AmplifyAuthService._internal() {
-    _configureAmplify();
-  }
-
-  Future<void> _configureAmplify() async {
-    try {
-      final auth = AmplifyAuthCognito();
-      await Amplify.addPlugin(auth);
-
-      // call Amplify.configure to use the initialized categories in your app
-      await Amplify.configure(amplifyconfig);
-    } on Exception catch (e) {
-      safePrint('An error occurred configuring Amplify: $e');
-    }
-  }
 
   Future<bool> isUserSignedIn() async {
     final result = await Amplify.Auth.fetchAuthSession();

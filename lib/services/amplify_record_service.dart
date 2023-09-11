@@ -1,31 +1,8 @@
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import '../models/ModelProvider.dart';
-import '../amplifyconfiguration.dart';
 
 class AmplifyWasteWalkRecordService {
-  static final AmplifyWasteWalkRecordService _instance =
-      AmplifyWasteWalkRecordService._internal();
-
-  factory AmplifyWasteWalkRecordService() {
-    return _instance;
-  }
-
-  AmplifyWasteWalkRecordService._internal() {
-    _configureAmplify();
-  }
-
-  Future<void> _configureAmplify() async {
-    final api = AmplifyAPI(modelProvider: ModelProvider.instance);
-    await Amplify.addPlugin(api);
-
-    try {
-      await Amplify.configure(amplifyconfig);
-    } on Exception catch (e) {
-      print('An error occurred configuring Amplify: $e');
-    }
-  }
-
   Future<void> createWasteWalkRecord(
       List<Coordinate> coordinates,
       String userId,
