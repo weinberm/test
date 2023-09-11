@@ -68,6 +68,15 @@ class MapViewModel extends ChangeNotifier {
         await amplifyWasteWalkRecordService.queryItemsWithinBorder(
             boxBorderTop, boxBorderRight, boxBorderBottom, boxBorderLeft);
 
+    List<WasteWalkRecord> filteredList = wasteWalkRecords
+        .where((record) => record != null)
+        .map((record) => record!) // Unwrap the non-null values
+        .toList();
+
+    if (wasteWalkRecords.isNotEmpty) {
+      mapData.setOtherWasteWalks(filteredList);
+    }
+
     print(wasteWalkRecords.toString());
 
     mapData.setCurrentPosMarker(currentPos);
@@ -129,12 +138,11 @@ class MapViewModel extends ChangeNotifier {
   // Methode zum Verarbeiten des Widget-Zerstörungsereignisses
   void onWidgetDisposed() {
     widgetAlive = false;
-    print("Disposed");
   }
 
   void onWidgetInit() {
     widgetAlive = true;
-    print("Init");
+    // mapData.moveMapCenterToCurrentPos();
   }
 
   /// Funktion zum Starten des Timers
@@ -200,6 +208,11 @@ class MapViewModel extends ChangeNotifier {
 
   /// Funktion zum Ein- und Ausschalten des Ausblendens anderer Abfallwege
   void toggleHideOtherWalks() {
+    if (hideOtherWalks) {
+      mapData.removeOtherWasteWalksFromBoxView();
+    } else {
+      mapData.addOtherWasteWalksToBoxView();
+    }
     hideOtherWalks = !hideOtherWalks;
     notifyListeners();
   }
@@ -227,8 +240,15 @@ class MapViewModel extends ChangeNotifier {
               position.bounds!.south,
               position.bounds!.west);
 
-      print(wasteWalkRecords.toString());
-      print("View left Box");
+      List<WasteWalkRecord> filteredList = wasteWalkRecords
+          .where((record) => record != null)
+          .map((record) => record!) // Unwrap the non-null values
+          .toList();
+
+      if (wasteWalkRecords.isNotEmpty) {
+        mapData.setOtherWasteWalks(filteredList);
+      }
+
       setNewBoxBorder(Coordinate(
           latitude: position.center!.latitude,
           longtitude: position.center!.longitude));
@@ -241,6 +261,8 @@ class MapViewModel extends ChangeNotifier {
     print("R Box: $boxBorderRight View: ${position.bounds!.east}");
     print("B Box: $boxBorderBottom View: ${position.bounds!.south}");
     print("L Box: $boxBorderLeft View: ${position.bounds!.west}");
+
+    notifyListeners();
   }
 
   bool viewOutOfBox(double viewTopBorder, double viewRightBorder,
