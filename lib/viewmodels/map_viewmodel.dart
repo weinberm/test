@@ -44,6 +44,11 @@ class MapViewModel extends ChangeNotifier {
   late double bottom;
   late double left;
 
+  late double boxBorderTop;
+  late double boxBorderRight;
+  late double boxBorderBottom;
+  late double boxBorderLeft;
+
   MapViewModel() : super() {
     initialize();
   }
@@ -56,6 +61,14 @@ class MapViewModel extends ChangeNotifier {
 
     Coordinate currentPos =
         await backgroundLocationService.getCurrentPosition();
+
+    setNewBoxBorder(currentPos);
+
+    List<WasteWalkRecord?> wasteWalkRecords =
+        await amplifyWasteWalkRecordService.queryItemsWithinBorder(
+            boxBorderTop, boxBorderRight, boxBorderBottom, boxBorderLeft);
+
+    print(wasteWalkRecords.toString());
 
     mapData.setCurrentPosMarker(currentPos);
     mapData.changeMapCenter(currentPos);
@@ -88,11 +101,6 @@ class MapViewModel extends ChangeNotifier {
         if (newCoordinate.longtitude! < left) {
           left = newCoordinate.longtitude!;
         }
-
-        print("Top ${top}");
-        print("Bottom ${bottom}");
-        print("left ${left}");
-        print("right ${right}");
       }
 
       mapData.setCurrentPosMarker(newCoordinate);
@@ -114,11 +122,6 @@ class MapViewModel extends ChangeNotifier {
         if (newCoordinate.longtitude! < left) {
           left = newCoordinate.longtitude!;
         }
-
-        print("Top ${top}");
-        print("Bottom ${bottom}");
-        print("left ${left}");
-        print("right ${right}");
       }
     }
   }
@@ -174,18 +177,11 @@ class MapViewModel extends ChangeNotifier {
     stopTimer();
     String userId = await amplifyService.getCurrentUserId();
     amplifyWasteWalkRecordService.createWasteWalkRecord(
-        currentWasteWalkCoordinates,
-        userId,
-        WasteWalkMapBorder(north: top, east: right, south: bottom, west: left));
+        currentWasteWalkCoordinates, userId, top, right, bottom, left);
 
     currentWasteWalkCoordinates.clear();
     mapData.currentWasteWalkRoute.points.clear();
     mapData.markers.remove(mapData.startPosMarker);
-
-    print(top);
-    print(bottom);
-    print(left);
-    print(right);
 
     notifyListeners();
   }
@@ -209,16 +205,68 @@ class MapViewModel extends ChangeNotifier {
   }
 
 //   /// Wird aufgerufen, wenn die Kartenposition geändert wird
-  void onPositionChanged(MapPosition position, bool hasGesture) {
+  void onPositionChanged(MapPosition position, bool hasGesture) async {
     if (lockPositionValue && hasGesture) {
       unlockPosition();
     }
     // _currentZoom = position.zoom!;
     // // print("Center: ${position.center!.latitude} ${position.center!.longitude}");
-    print(mapData.currentPosMarker.point);
-    print("Zoom: ${position.zoom}");
-    print(
-        "Bounds: N${position.bounds!.north} E${position.bounds!.east} S${position.bounds!.south} W${position.bounds!.west}");
+    // print(mapData.currentPosMarker.point);
+    // print("Zoom: ${position.zoom}");
+    // print(
+    //     "Bounds: N${position.bounds!.north} E${position.bounds!.east} S${position.bounds!.south} W${position.bounds!.west}");
+
+    // print("Inside Bounds");
     // // print("Has Gesture: $hasGesture");
+    if (viewOutOfBox(position.bounds!.north, position.bounds!.east,
+        position.bounds!.south, position.bounds!.west)) {
+      List<WasteWalkRecord?> wasteWalkRecords =
+          await amplifyWasteWalkRecordService.queryItemsWithinBorder(
+              position.bounds!.north,
+              position.bounds!.east,
+              position.bounds!.south,
+              position.bounds!.west);
+
+      print(wasteWalkRecords.toString());
+      print("View left Box");
+      setNewBoxBorder(Coordinate(
+          latitude: position.center!.latitude,
+          longtitude: position.center!.longitude));
+    } else {
+      print("View inside Box Border");
+    }
+
+    print("onposchanged box border");
+    print("T Box: $boxBorderTop View: ${position.bounds!.north} ");
+    print("R Box: $boxBorderRight View: ${position.bounds!.east}");
+    print("B Box: $boxBorderBottom View: ${position.bounds!.south}");
+    print("L Box: $boxBorderLeft View: ${position.bounds!.west}");
+  }
+
+  bool viewOutOfBox(double viewTopBorder, double viewRightBorder,
+      double viewBottomBorder, double viewLeftBorder) {
+    if (boxBorderBottom > viewBottomBorder) {
+      return true;
+    } else if (boxBorderTop < viewTopBorder) {
+      return true;
+    } else if (boxBorderLeft > viewLeftBorder) {
+      return true;
+    } else if (boxBorderRight < viewRightBorder) {
+      return true;
+    }
+
+    return false;
+  }
+
+  void setNewBoxBorder(Coordinate currentCoordinate) {
+    boxBorderTop = currentCoordinate.latitude! + 1;
+    boxBorderBottom = currentCoordinate.latitude! - 1;
+    boxBorderRight = currentCoordinate.longtitude! + 0.5;
+    boxBorderLeft = currentCoordinate.longtitude! - 0.5;
+
+    print("T $boxBorderTop");
+    print("R $boxBorderRight");
+    print("B $boxBorderBottom");
+    print("L $boxBorderLeft");
   }
 }
