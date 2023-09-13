@@ -1,14 +1,9 @@
 // Importiere erforderliche Pakete und Bibliotheken
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
-import 'package:flutter_map/flutter_map.dart' as fm;
-import 'package:latlong2/latlong.dart';
 import 'package:waste_walking_ba/models/MapData.dart';
 import 'package:waste_walking_ba/models/ModelProvider.dart';
 import 'package:waste_walking_ba/services/amplify_service.dart';
-import '../models/Coordinate.dart';
 import 'package:waste_walking_ba/services/backgroundlocation_service.dart';
 import 'dart:async';
 
@@ -31,8 +26,9 @@ class MapViewModel extends ChangeNotifier {
   /// Zustandsvariablen für die Kartenansicht
   bool trackingActive = false;
   bool lockPositionValue = true;
-  bool hideOtherWalks = false;
+  bool showOtherWalks = false;
   bool widgetAlive = false;
+  bool initialized = false;
 
   /// Variablen für die Zeitmessung
   late DateTime startTime; // Setze das Startdatum
@@ -64,15 +60,31 @@ class MapViewModel extends ChangeNotifier {
     Coordinate currentPos =
         await backgroundLocationService.getCurrentPosition();
 
-    setNewBoxBorder(currentPos);
+    updateViewBoxBorder(currentPos);
 
     while (!aS.configured) {
       print("AWS Not Config Yet");
       await Future.delayed(const Duration(seconds: 1)); // Warte 1 Sekunde
     }
+    await filterAndSetWasteWalkRecords(
+        boxBorderTop, boxBorderRight, boxBorderBottom, boxBorderLeft);
+    mapData.addOtherWasteWalksToBoxView();
+
+    mapData.setCurrentPosMarker(currentPos);
+    mapData.changeMapCenter(currentPos);
+
+    backgroundLocationService.startLocationTimer();
+
+    initialized = true;
+
+    notifyListeners();
+  }
+
+  Future<void> filterAndSetWasteWalkRecords(
+      double top, double right, double bottom, double left) async {
     List<WasteWalkRecord?> wasteWalkRecords =
         await amplifyWasteWalkRecordService.queryItemsWithinBorder(
-            boxBorderTop, boxBorderRight, boxBorderBottom, boxBorderLeft);
+            top, right, bottom, left);
 
     List<WasteWalkRecord> filteredList = wasteWalkRecords
         .where((record) => record != null)
@@ -82,19 +94,9 @@ class MapViewModel extends ChangeNotifier {
     if (wasteWalkRecords.isNotEmpty) {
       mapData.setOtherWasteWalks(filteredList);
     }
-
-    print(wasteWalkRecords.toString());
-
-    mapData.setCurrentPosMarker(currentPos);
-    mapData.changeMapCenter(currentPos);
-
-    backgroundLocationService.startLocationTimer();
-
-    notifyListeners();
   }
 
   void proccessNewCoordinate(Coordinate newCoordinate) {
-    print(newCoordinate);
     if (widgetAlive) {
       if (lockPositionValue) {
         mapData.changeMapCenter(newCoordinate);
@@ -103,19 +105,7 @@ class MapViewModel extends ChangeNotifier {
       if (trackingActive) {
         currentWasteWalkCoordinates.add(newCoordinate);
         mapData.addPointToCurrentWasteWalkRoute(newCoordinate);
-
-        if (newCoordinate.latitude! > top) {
-          top = newCoordinate.latitude!;
-        }
-        if (newCoordinate.latitude! < bottom) {
-          bottom = newCoordinate.latitude!;
-        }
-        if (newCoordinate.longtitude! > right) {
-          right = newCoordinate.longtitude!;
-        }
-        if (newCoordinate.longtitude! < left) {
-          left = newCoordinate.longtitude!;
-        }
+        updateWalkBoundaries(newCoordinate);
       }
 
       mapData.setCurrentPosMarker(newCoordinate);
@@ -124,21 +114,17 @@ class MapViewModel extends ChangeNotifier {
     } else {
       if (trackingActive) {
         currentWasteWalkCoordinates.add(newCoordinate);
-
-        if (newCoordinate.latitude! > top) {
-          top = newCoordinate.latitude!;
-        }
-        if (newCoordinate.latitude! < bottom) {
-          bottom = newCoordinate.latitude!;
-        }
-        if (newCoordinate.longtitude! > right) {
-          right = newCoordinate.longtitude!;
-        }
-        if (newCoordinate.longtitude! < left) {
-          left = newCoordinate.longtitude!;
-        }
+        updateWalkBoundaries(newCoordinate);
       }
+      mapData.setCurrentPosMarker(newCoordinate);
     }
+  }
+
+  void updateWalkBoundaries(Coordinate newCoordinate) {
+    if (newCoordinate.latitude! > top) top = newCoordinate.latitude!;
+    if (newCoordinate.latitude! < bottom) bottom = newCoordinate.latitude!;
+    if (newCoordinate.longtitude! > right) right = newCoordinate.longtitude!;
+    if (newCoordinate.longtitude! < left) left = newCoordinate.longtitude!;
   }
 
   // Methode zum Verarbeiten des Widget-Zerstörungsereignisses
@@ -147,8 +133,10 @@ class MapViewModel extends ChangeNotifier {
   }
 
   void onWidgetInit() {
-    widgetAlive = true;
-    // mapData.moveMapCenterToCurrentPos();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widgetAlive = true;
+      mapData.moveMapCenterToCurrentPos();
+    });
   }
 
   /// Funktion zum Starten des Timers
@@ -213,62 +201,44 @@ class MapViewModel extends ChangeNotifier {
   }
 
   /// Funktion zum Ein- und Ausschalten des Ausblendens anderer Abfallwege
-  void toggleHideOtherWalks() {
-    if (hideOtherWalks) {
-      mapData.removeOtherWasteWalksFromBoxView();
-    } else {
+  void toggleshowOtherWalks() {
+    if (showOtherWalks) {
       mapData.addOtherWasteWalksToBoxView();
+    } else {
+      mapData.removeOtherWasteWalksFromBoxView();
     }
-    hideOtherWalks = !hideOtherWalks;
+    showOtherWalks = !showOtherWalks;
     notifyListeners();
   }
 
-//   /// Wird aufgerufen, wenn die Kartenposition geändert wird
+  /// Wird aufgerufen, wenn die Kartenposition geändert wird
   void onPositionChanged(MapPosition position, bool hasGesture) async {
-    if (lockPositionValue && hasGesture) {
-      unlockPosition();
-    }
-    // _currentZoom = position.zoom!;
-    // // print("Center: ${position.center!.latitude} ${position.center!.longitude}");
-    // print(mapData.currentPosMarker.point);
-    // print("Zoom: ${position.zoom}");
-    // print(
-    //     "Bounds: N${position.bounds!.north} E${position.bounds!.east} S${position.bounds!.south} W${position.bounds!.west}");
-
-    // print("Inside Bounds");
-    // // print("Has Gesture: $hasGesture");
-    if (viewOutOfBox(position.bounds!.north, position.bounds!.east,
-        position.bounds!.south, position.bounds!.west)) {
-      List<WasteWalkRecord?> wasteWalkRecords =
-          await amplifyWasteWalkRecordService.queryItemsWithinBorder(
-              position.bounds!.north,
-              position.bounds!.east,
-              position.bounds!.south,
-              position.bounds!.west);
-
-      List<WasteWalkRecord> filteredList = wasteWalkRecords
-          .where((record) => record != null)
-          .map((record) => record!) // Unwrap the non-null values
-          .toList();
-
-      if (wasteWalkRecords.isNotEmpty) {
-        mapData.setOtherWasteWalks(filteredList);
+    if (initialized) {
+      if (lockPositionValue && hasGesture) {
+        unlockPosition();
       }
+      // _currentZoom = position.zoom!;
+      // // print("Center: ${position.center!.latitude} ${position.center!.longitude}");
+      // print(mapData.currentPosMarker.point);
+      // print("Zoom: ${position.zoom}");
+      // print(
+      //     "Bounds: N${position.bounds!.north} E${position.bounds!.east} S${position.bounds!.south} W${position.bounds!.west}");
 
-      setNewBoxBorder(Coordinate(
-          latitude: position.center!.latitude,
-          longtitude: position.center!.longitude));
-    } else {
-      print("View inside Box Border");
+      // print("Inside Bounds");
+      // // print("Has Gesture: $hasGesture");
+      if (viewOutOfBox(position.bounds!.north, position.bounds!.east,
+          position.bounds!.south, position.bounds!.west)) {
+        await filterAndSetWasteWalkRecords(
+            position.bounds!.north,
+            position.bounds!.east,
+            position.bounds!.south,
+            position.bounds!.west);
+        updateViewBoxBorder(Coordinate(
+            latitude: position.center!.latitude,
+            longtitude: position.center!.longitude));
+      }
+      notifyListeners();
     }
-
-    print("onposchanged box border");
-    print("T Box: $boxBorderTop View: ${position.bounds!.north} ");
-    print("R Box: $boxBorderRight View: ${position.bounds!.east}");
-    print("B Box: $boxBorderBottom View: ${position.bounds!.south}");
-    print("L Box: $boxBorderLeft View: ${position.bounds!.west}");
-
-    notifyListeners();
   }
 
   bool viewOutOfBox(double viewTopBorder, double viewRightBorder,
@@ -286,15 +256,10 @@ class MapViewModel extends ChangeNotifier {
     return false;
   }
 
-  void setNewBoxBorder(Coordinate currentCoordinate) {
+  void updateViewBoxBorder(Coordinate currentCoordinate) {
     boxBorderTop = currentCoordinate.latitude! + 1;
     boxBorderBottom = currentCoordinate.latitude! - 1;
     boxBorderRight = currentCoordinate.longtitude! + 0.5;
     boxBorderLeft = currentCoordinate.longtitude! - 0.5;
-
-    print("T $boxBorderTop");
-    print("R $boxBorderRight");
-    print("B $boxBorderBottom");
-    print("L $boxBorderLeft");
   }
 }

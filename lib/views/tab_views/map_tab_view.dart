@@ -161,8 +161,8 @@ class _MapTabViewState extends State<MapTabView> {
                 Container(
                     child: Center(
                   child: ElevatedButton(
-                    onPressed: widget.mapViewModel.toggleHideOtherWalks,
-                    child: Icon(widget.mapViewModel.hideOtherWalks
+                    onPressed: widget.mapViewModel.toggleshowOtherWalks,
+                    child: Icon(widget.mapViewModel.showOtherWalks
                         ? Icons.layers
                         : Icons.layers_clear),
                   ),
