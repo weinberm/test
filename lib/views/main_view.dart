@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:waste_walking_ba/viewmodels/main_viewmodel.dart';
 import 'package:waste_walking_ba/viewmodels/map_viewmodel.dart';
 import 'package:waste_walking_ba/viewmodels/history_viewmodel.dart';
+import 'package:waste_walking_ba/views/login_view.dart';
 
 import 'package:waste_walking_ba/widgets/bottom_navbar.dart';
 
@@ -25,6 +26,43 @@ class MainView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Überprüfen Sie, ob der Benutzer angemeldet ist
+    bool isUserLoggedIn = mainViewModel.amplifyService.signedIn;
+
+    if (!isUserLoggedIn && mainViewModel.selectedIndex == 0) {
+      // Direkt in der build Methode
+      WidgetsBinding.instance?.addPostFrameCallback((_) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Bitte anmelden'),
+              content: Text(
+                  'Für den Zugriff auf die Community müssen Sie angemeldet sein.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginView()),
+                    );
+                  },
+                  child: Text('Anmelden'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Abbrechen'),
+                ),
+              ],
+            );
+          },
+        );
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
@@ -34,7 +72,7 @@ class MainView extends StatelessWidget {
         selectedIndex: mainViewModel.selectedIndex,
         onItemTapped: mainViewModel.changeTabIndex,
       ),
-      body: _buildTabBody(mainViewModel),
+      body: _buildTabBody(mainViewModel, context),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -44,7 +82,7 @@ class MainView extends StatelessWidget {
     );
   }
 
-  Widget _buildTabBody(MainViewModel mainViewModel) {
+  Widget _buildTabBody(MainViewModel mainViewModel, BuildContext context) {
     switch (mainViewModel.selectedIndex) {
       case 0:
         return CommunityTabView(

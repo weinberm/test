@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter_map/flutter_map.dart' as flutterMap;
 import 'package:latlong2/latlong.dart';
-import 'package:waste_walking_ba/models/Coordinate.dart';
 import 'package:waste_walking_ba/models/ModelProvider.dart';
 
 class MapData {
@@ -31,7 +30,7 @@ class MapData {
 
   double currentZoom = 18;
 
-  late Coordinate lastCoordinate;
+  Coordinate lastCoordinate = Coordinate(latitude: 0, longtitude: 0);
 
   MapData() {
     wasteWalkRoutes.add(currentWasteWalkRoute);
@@ -51,7 +50,7 @@ class MapData {
     Coordinate coordinate = Coordinate(
         latitude: currentPosMarker.point.latitude,
         longtitude: currentPosMarker.point.longitude);
-    lastCoordinate = coordinate;
+    setLastCoordinate(coordinate);
 
     markers.remove(currentPosMarker);
     currentPosMarker = flutterMap.Marker(
@@ -61,6 +60,10 @@ class MapData {
       builder: (context) => Icon(Icons.my_location),
     );
     markers.add(currentPosMarker);
+  }
+
+  void setLastCoordinate(Coordinate newCoordinate) {
+    lastCoordinate = newCoordinate;
   }
 
   void addPointToCurrentWasteWalkRoute(Coordinate newCoordinate) {

@@ -13,9 +13,7 @@ class AmplifyService {
     return _instance;
   }
 
-  AmplifyService._internal() {
-    _configureAmplify();
-  }
+  AmplifyService._internal();
 
   AmplifyAuthService authentification = AmplifyAuthService();
 
@@ -23,7 +21,11 @@ class AmplifyService {
 
   bool configured = false;
 
-  Future<void> _configureAmplify() async {
+  Future<void> configureAmplify() async {
+    if (configured) {
+      return;
+    }
+
     try {
       final auth = AmplifyAuthCognito();
       await Amplify.addPlugin(auth);
@@ -32,11 +34,12 @@ class AmplifyService {
       await Amplify.addPlugin(api);
 
       await Amplify.configure(amplifyconfig);
-    } on Exception catch (e) {
+
+      configured = true;
+      print("AWS Configured");
+      print(configured);
+    } catch (e) {
       print('An error occurred configuring Amplify: $e');
     }
-    configured = true;
-    print("AWS Configured");
-    print(configured);
   }
 }
