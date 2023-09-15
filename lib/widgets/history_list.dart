@@ -20,9 +20,16 @@ class HistoryList extends StatelessWidget {
                 // Handle item click here
                 print('Item clicked: ${records[index].id}');
               },
-              child: HistoryListItem(
-                record: records[index],
-              ),
+              child: Column(children: [
+                HistoryListItem(
+                  record: records[index],
+                ),
+                Container(
+                  height: 2, // Höhe des unteren Balkens
+                  color:
+                      Color(0xFF2A3D18), // Hintergrundfarbe des unteren Balkens
+                )
+              ]),
             );
           },
         ),

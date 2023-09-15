@@ -26,9 +26,9 @@ class MyApp extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           // Amplify ist konfiguriert, App normal starten
           return MaterialApp(
-            title: 'Waste Walking 2.0',
             theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              colorScheme:
+                  ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 0, 0, 0)),
               useMaterial3: true,
             ),
             home: MultiProvider(
