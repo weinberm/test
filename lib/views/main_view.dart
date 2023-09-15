@@ -64,22 +64,61 @@ class MainView extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.green,
-        title: Text(title),
-      ),
-      bottomNavigationBar: BottomNavBar(
-        selectedIndex: mainViewModel.selectedIndex,
-        onItemTapped: mainViewModel.changeTabIndex,
-      ),
-      body: _buildTabBody(mainViewModel, context),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          // Weitere FloatingActionButton Widgets hier
-        ],
-      ),
-    );
+        appBar: AppBar(
+          toolbarHeight: 60,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image(
+                image: AssetImage("assets/logo/ww-logo.png"),
+                width: 40,
+                height: 40,
+              ), // Ihr zentrales Icon
+            ],
+          ),
+        ),
+        drawer: Drawer(
+          // Fügen Sie die Elemente Ihres Drawers hier hinzu
+          child: ListView(
+            children: [
+              DrawerHeader(
+                child: Text('Drawer Header'),
+              ),
+              ListTile(
+                title: Text('Item 1'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text('Item 2'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: BottomNavBar(
+          selectedIndex: mainViewModel.selectedIndex,
+          onItemTapped: mainViewModel.changeTabIndex,
+        ),
+        body: Column(
+          children: [
+            Container(
+              height: 4, // Höhe des oberen Balkens
+              color: Color(0xFF35B05C), // Hintergrundfarbe des oberen Balkens
+            ),
+            Expanded(
+              child: _buildTabBody(
+                  mainViewModel, context), // Ihr eigentlicher Inhalt
+            ),
+            Container(
+              height: 4, // Höhe des unteren Balkens
+              color: Color(0xFF35B05C), // Hintergrundfarbe des unteren Balkens
+            ),
+          ],
+        ));
   }
 
   Widget _buildTabBody(MainViewModel mainViewModel, BuildContext context) {
