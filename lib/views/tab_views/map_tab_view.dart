@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_map/flutter_map.dart' as fm;
@@ -66,7 +68,7 @@ class _MapTabViewState extends State<MapTabView> {
                     ],
                   ),
                   Positioned(
-                    bottom: 16,
+                    bottom: 80,
                     right: 8,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -112,54 +114,46 @@ class _MapTabViewState extends State<MapTabView> {
                           ),
                         )),
                         SizedBox(height: 8),
-                        Container(
-                          width: 48, // Breite des Containers
-                          height: 48, // Höhe des Containers
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      8.0), // Abgerundete Ecken
-                                ),
-                                padding: EdgeInsets.all(0),
-                                backgroundColor: Colors.white,
-                                foregroundColor: Color(0xFF35B05C)),
-                            onPressed: () async {
-                              await widget.mapViewModel.amplifyService
-                                  .isUserSignedIn();
-                              if (!widget
-                                  .mapViewModel.amplifyService.signedIn) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return CustomDialog(
-                                      text:
-                                          'Sie müssen sich anmelden um diese Funktion nutzen zu können.',
-                                      onPositiveButtonPressed: () {
-                                        // Hier kannst du die Aktion für den positiven Button definieren
-                                        widget.mapViewModel.amplifyService
-                                            .signInUser();
-                                        Navigator.pop(
-                                            context); // Dialog schließen
-                                      },
-                                      onNegativeButtonPressed: () {
-                                        // Hier kannst du die Aktion für den negativen Button definieren
-                                        Navigator.pop(
-                                            context); // Dialog schließen
-                                      },
-                                    );
-                                  },
-                                );
-                              } else {
-                                if (!widget.mapViewModel.trackingActive) {
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 16,
+                    right: (MediaQuery.of(context).size.width / 2) - 92,
+                    child: Container(
+                        width: 184, // Breite des Containers
+                        height: 48, // Höhe des Containers
+                        child: Center(
+                          child: Container(
+                            width: 184, // Breite des Containers
+                            height: 48, // Höhe des Containers
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    // Abgerundete Ecken
+                                  ),
+                                  padding: EdgeInsets.all(0),
+                                  backgroundColor:
+                                      widget.mapViewModel.trackingActive
+                                          ? Colors.red
+                                          : Color(0xFF35B05C),
+                                  foregroundColor: Colors.white),
+                              onPressed: () async {
+                                await widget.mapViewModel.amplifyService
+                                    .isUserSignedIn();
+                                if (!widget
+                                    .mapViewModel.amplifyService.signedIn) {
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
                                       return CustomDialog(
-                                        text: 'Möchten Sie fortfahren?',
+                                        text:
+                                            'Sie müssen sich anmelden um diese Funktion nutzen zu können.',
                                         onPositiveButtonPressed: () {
                                           // Hier kannst du die Aktion für den positiven Button definieren
-                                          widget.mapViewModel.startTracking();
+                                          widget.mapViewModel.amplifyService
+                                              .signInUser();
                                           Navigator.pop(
                                               context); // Dialog schließen
                                         },
@@ -172,37 +166,74 @@ class _MapTabViewState extends State<MapTabView> {
                                     },
                                   );
                                 } else {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return CustomDialog(
-                                        text: 'Möchten Sie beenden?',
-                                        onPositiveButtonPressed: () {
-                                          // Hier kannst du die Aktion für den positiven Button definieren
-                                          widget.mapViewModel.stopTracking();
-                                          Navigator.pop(
-                                              context); // Dialog schließen
-                                        },
-                                        onNegativeButtonPressed: () {
-                                          // Hier kannst du die Aktion für den negativen Button definieren
-                                          Navigator.pop(
-                                              context); // Dialog schließen
-                                        },
-                                      );
-                                    },
-                                  );
+                                  if (!widget.mapViewModel.trackingActive) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return CustomDialog(
+                                          text: 'Möchten Sie fortfahren?',
+                                          onPositiveButtonPressed: () {
+                                            // Hier kannst du die Aktion für den positiven Button definieren
+                                            widget.mapViewModel.startTracking();
+                                            Navigator.pop(
+                                                context); // Dialog schließen
+                                          },
+                                          onNegativeButtonPressed: () {
+                                            // Hier kannst du die Aktion für den negativen Button definieren
+                                            Navigator.pop(
+                                                context); // Dialog schließen
+                                          },
+                                        );
+                                      },
+                                    );
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return CustomDialog(
+                                          text: 'Möchten Sie beenden?',
+                                          onPositiveButtonPressed: () {
+                                            // Hier kannst du die Aktion für den positiven Button definieren
+                                            widget.mapViewModel.stopTracking();
+                                            Navigator.pop(
+                                                context); // Dialog schließen
+                                          },
+                                          onNegativeButtonPressed: () {
+                                            // Hier kannst du die Aktion für den negativen Button definieren
+                                            Navigator.pop(
+                                                context); // Dialog schließen
+                                          },
+                                        );
+                                      },
+                                    );
+                                  }
                                 }
-                              }
-                            },
-                            child: Icon(
-                                widget.mapViewModel.trackingActive
-                                    ? Icons.stop_circle
-                                    : Icons.play_circle,
-                                size: 40),
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  widget.mapViewModel.trackingActive
+                                      ? const Text("Walk beenden",
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.black))
+                                      : const Text(
+                                          "Walk starten",
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.black),
+                                        ),
+                                  const SizedBox(width: 8),
+                                  Icon(
+                                      widget.mapViewModel.trackingActive
+                                          ? Icons.stop_circle
+                                          : Icons.play_circle,
+                                      size: 40)
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        )),
                   ),
                 ],
               ),

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:waste_walking_ba/viewmodels/leaderboard_viewmodel.dart';
 
-class LeaderboardTabView extends StatefulWidget {
-  const LeaderboardTabView({super.key});
+import 'package:waste_walking_ba/viewmodels/main_viewmodel.dart';
 
-  @override
-  State<LeaderboardTabView> createState() => _LeaderboardTabViewState();
-}
+class LeaderboardTabView extends StatelessWidget {
+  LeaderboardTabView(
+      {required this.mainViewModel, required this.leaderboardViewModel});
 
-class _LeaderboardTabViewState extends State<LeaderboardTabView> {
+  final MainViewModel mainViewModel;
+  final LeaderboardViewModel leaderboardViewModel;
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder(
-      child: Text("To be implemented LEad"),
-    );
+    return Placeholder();
   }
 }
