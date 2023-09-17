@@ -15,10 +15,6 @@ class AmplifyService {
 
   AmplifyService._internal();
 
-  AmplifyAuthService authentification = AmplifyAuthService();
-
-  AmplifyWasteWalkRecordService recordService = AmplifyWasteWalkRecordService();
-
   bool configured = false;
 
   Future<void> configureAmplify() async {
@@ -36,8 +32,6 @@ class AmplifyService {
       await Amplify.configure(amplifyconfig);
 
       configured = true;
-      print("AWS Configured");
-      print(configured);
     } catch (e) {
       print('An error occurred configuring Amplify: $e');
     }

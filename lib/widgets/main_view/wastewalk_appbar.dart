@@ -15,6 +15,7 @@ class _WasteWalkAppBarState extends State<WasteWalkAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      toolbarHeight: 300,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -98,29 +99,3 @@ class _WasteWalkAppBarState extends State<WasteWalkAppBar> {
     );
   }
 }
-
-// As Stateless Widget
-// import 'package:flutter/material.dart';
-
-// class WasteWalkAppBar extends StatelessWidget implements PreferredSizeWidget {
-//   const WasteWalkAppBar({Key? key}) : super(key: key);
-
-//   @override
-//   Size get preferredSize => Size.fromHeight(60); // Sie hatten toolbarHeight auf 60 gesetzt
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return AppBar(
-//       toolbarHeight: 60,
-//       title: const Row(
-//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//         children: [
-//           Image(
-//             image: AssetImage("assets/logo/ww-logo.png"),
-//             width: 40,
-//             height: 40,
-//           ), // Ihr zentrales Icon
-//         ],
-//       ),
-//     );
-//   }

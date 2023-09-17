@@ -25,7 +25,7 @@ class HistoryList extends StatelessWidget {
                   record: records[index],
                 ),
                 Container(
-                  height: 2, // Höhe des unteren Balkens
+                  height: 4, // Höhe des unteren Balkens
                   color:
                       Color(0xFF2A3D18), // Hintergrundfarbe des unteren Balkens
                 )

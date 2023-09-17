@@ -27,7 +27,8 @@ class MyApp extends StatelessWidget {
           // Amplify ist konfiguriert, App normal starten
           return MaterialApp(
               theme: ThemeData(
-                colorScheme: ColorScheme.light(primary: Color(0xFF35B05C)),
+                colorScheme:
+                    const ColorScheme.light(primary: Color(0xFF35B05C)),
                 textTheme: const TextTheme(
                     headlineSmall:
                         TextStyle(fontSize: 10, color: Colors.black)),

@@ -29,10 +29,7 @@ class MainView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: const WasteWalkAppBar(),
-        bottomNavigationBar: BottomNavBar(
-          selectedIndex: mainViewModel.selectedIndex,
-          onItemTapped: mainViewModel.changeTabIndex,
-        ),
+        bottomNavigationBar: BottomNavBar(),
         body: Column(
           children: [
             Container(

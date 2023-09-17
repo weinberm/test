@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:waste_walking_ba/models/MapData.dart';
 import 'package:waste_walking_ba/models/ModelProvider.dart';
-import 'package:waste_walking_ba/services/amplify_service.dart';
+import 'package:waste_walking_ba/repositories/authentification_repository.dart';
+import 'package:waste_walking_ba/repositories/wastewalkrecord_repository.dart';
 import 'package:waste_walking_ba/services/backgroundlocation_service.dart';
 import 'dart:async';
-
-import 'package:waste_walking_ba/services/amplify_record_service.dart';
-import '../services/amplify_auth_service.dart';
 
 // Definiere die ViewModel-Klasse für die Kartenansicht
 class MapViewModel extends ChangeNotifier {
@@ -16,10 +14,10 @@ class MapViewModel extends ChangeNotifier {
   final BackgroundLocationService backgroundLocationService =
       BackgroundLocationService();
 
-  AmplifyService aS = AmplifyService();
-  AmplifyAuthService amplifyService = AmplifyService().authentification;
-  AmplifyWasteWalkRecordService amplifyWasteWalkRecordService =
-      AmplifyService().recordService;
+  final AuthentificationRepository authentificationRepository =
+      AuthentificationRepository();
+  final WasteWalkRecordRepository walkRecordRepository =
+      WasteWalkRecordRepository();
 
   final MapData mapData = MapData();
 
