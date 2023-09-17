@@ -26,25 +26,31 @@ class MyApp extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           // Amplify ist konfiguriert, App normal starten
           return MaterialApp(
-            theme: ThemeData(
-              colorScheme:
-                  ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 0, 0, 0)),
-              useMaterial3: true,
-            ),
-            home: MultiProvider(
-              providers: [
-                ChangeNotifierProvider(create: (context) => MainViewModel()),
-                ChangeNotifierProvider(create: (context) => MapViewModel()),
-              ],
-              builder: (context, child) {
-                return MainView(
-                  mainViewModel: Provider.of<MainViewModel>(context),
-                  mapViewModel: Provider.of<MapViewModel>(context),
-                  title: "Waste Walking Demo",
-                );
-              },
-            ),
-          );
+              theme: ThemeData(
+                colorScheme:
+                    ColorScheme.fromSeed(seedColor: const Color(0xFF35B05C)),
+                textTheme: const TextTheme(
+                    headlineSmall:
+                        TextStyle(fontSize: 10, color: Colors.black)),
+                useMaterial3: true,
+              ),
+              home: DefaultTabController(
+                length: 4,
+                child: MultiProvider(
+                  providers: [
+                    ChangeNotifierProvider(
+                        create: (context) => MainViewModel()),
+                    ChangeNotifierProvider(create: (context) => MapViewModel()),
+                  ],
+                  builder: (context, child) {
+                    return MainView(
+                      mainViewModel: Provider.of<MainViewModel>(context),
+                      mapViewModel: Provider.of<MapViewModel>(context),
+                      title: "Waste Walking Demo",
+                    );
+                  },
+                ),
+              ));
         } else {
           // Warte-Bildschirm anzeigen, während die Konfiguration abgeschlossen wird
           return const CircularProgressIndicator();
