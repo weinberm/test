@@ -41,7 +41,7 @@ class AmplifyAuthService {
   Future<void> confirmNewPassword() async {
     try {
       final result = await Amplify.Auth.confirmSignIn(
-        confirmationValue: "123456789MaLe.",
+        confirmationValue: "",
       );
       return _handleSignInResult(result);
     } on AuthException catch (e) {
