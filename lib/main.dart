@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:waste_walking_ba/viewmodels/main_viewmodel.dart';
 import 'package:waste_walking_ba/viewmodels/map_viewmodel.dart';
 import 'package:waste_walking_ba/services/amplify_service.dart'; // Importieren Sie die AmplifyService Klasse
-import 'package:waste_walking_ba/views/main_view.dart';
+import 'package:waste_walking_ba/views/page_views/main_view.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:waste_walking_ba/widgets/history_listitem.dart';
+import 'package:waste_walking_ba/widgets/history_tab/history_listitem.dart';
 
-import '../models/WasteWalkRecord.dart';
+import '../../models/WasteWalkRecord.dart';
 
 class HistoryList extends StatelessWidget {
   final List<WasteWalkRecord> records;

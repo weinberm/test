@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:waste_walking_ba/viewmodels/main_viewmodel.dart';
 import 'package:waste_walking_ba/viewmodels/map_viewmodel.dart';
 import 'package:waste_walking_ba/viewmodels/history_viewmodel.dart';
-import 'package:waste_walking_ba/views/login_view.dart';
+import 'package:waste_walking_ba/views/page_views/login_view.dart';
 
-import 'package:waste_walking_ba/widgets/bottom_navbar.dart';
+import 'package:waste_walking_ba/widgets/main_view/bottom_navbar.dart';
 
 import 'package:waste_walking_ba/views/tab_views/community_tab_view.dart';
 import 'package:waste_walking_ba/views/tab_views/history_tab_view.dart';
 import 'package:waste_walking_ba/views/tab_views/leaderboard_tab_view.dart';
 import 'package:waste_walking_ba/views/tab_views/map_tab_view.dart';
-import 'package:waste_walking_ba/views/tab_views/profile_tab_view.dart';
 
 import 'package:provider/provider.dart';
+import 'package:waste_walking_ba/widgets/main_view/wastewalk_appbar.dart';
 
 class MainView extends StatelessWidget {
   const MainView(
@@ -31,13 +31,13 @@ class MainView extends StatelessWidget {
 
     if (!isUserLoggedIn && mainViewModel.selectedIndex == 0) {
       // Direkt in der build Methode
-      WidgetsBinding.instance?.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('Bitte anmelden'),
-              content: Text(
+              title: const Text('Bitte anmelden'),
+              content: const Text(
                   'Für den Zugriff auf die Community müssen Sie angemeldet sein.'),
               actions: [
                 TextButton(
@@ -64,41 +64,7 @@ class MainView extends StatelessWidget {
     }
 
     return Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 60,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image(
-                image: AssetImage("assets/logo/ww-logo.png"),
-                width: 40,
-                height: 40,
-              ), // Ihr zentrales Icon
-            ],
-          ),
-        ),
-        drawer: Drawer(
-          // Fügen Sie die Elemente Ihres Drawers hier hinzu
-          child: ListView(
-            children: [
-              DrawerHeader(
-                child: Text('Drawer Header'),
-              ),
-              ListTile(
-                title: Text('Item 1'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: Text('Item 2'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        ),
+        appBar: const WasteWalkAppBar(),
         bottomNavigationBar: BottomNavBar(
           selectedIndex: mainViewModel.selectedIndex,
           onItemTapped: mainViewModel.changeTabIndex,
@@ -141,8 +107,6 @@ class MainView extends StatelessWidget {
             );
           },
         );
-      case 4:
-        return ProfileTabView();
       default:
         return Container();
     }

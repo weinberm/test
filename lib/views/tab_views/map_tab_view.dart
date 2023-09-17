@@ -5,7 +5,7 @@ import 'package:latlong2/latlong.dart';
 
 import 'package:waste_walking_ba/viewmodels/map_viewmodel.dart';
 
-import '../../widgets/dialog.dart';
+import '../../widgets/shared/dialog.dart';
 
 class MapTabView extends StatefulWidget {
   final MapViewModel mapViewModel;
@@ -76,8 +76,8 @@ class _MapTabViewState extends State<MapTabView> {
                             style: ElevatedButton.styleFrom(
                               shape: CircleBorder(),
                               padding: EdgeInsets.all(16),
-                              backgroundColor: Colors.white, // <-- Button color
-                              foregroundColor: Colors.black, // <-- Splash color
+                              backgroundColor: Colors.white,
+                              foregroundColor: Colors.black,
                             ),
                             onPressed: () => {
                               if (widget.mapViewModel.lockPositionValue)
@@ -99,9 +99,8 @@ class _MapTabViewState extends State<MapTabView> {
                             style: ElevatedButton.styleFrom(
                               shape: CircleBorder(),
                               padding: EdgeInsets.all(16),
-
-                              backgroundColor: Colors.white, // <-- Button color
-                              foregroundColor: Colors.black, // <-- Splash color
+                              backgroundColor: Colors.white,
+                              foregroundColor: Colors.black,
                             ),
                             onPressed: widget.mapViewModel.toggleshowOtherWalks,
                             child: Icon(
