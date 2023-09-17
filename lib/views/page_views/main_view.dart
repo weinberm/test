@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:waste_walking_ba/viewmodels/leaderboard_viewmodel.dart';
 import 'package:waste_walking_ba/viewmodels/main_viewmodel.dart';
 import 'package:waste_walking_ba/viewmodels/map_viewmodel.dart';
 import 'package:waste_walking_ba/viewmodels/history_viewmodel.dart';
@@ -35,14 +36,23 @@ class MainView extends StatelessWidget {
         body: Column(
           children: [
             Container(
-              height: 4, // Höhe des oberen Balkens
-              color: Color(0xFF35B05C), // Hintergrundfarbe des oberen Balkens
+              height: 4,
+              color: Color(0xFF35B05C),
             ),
             Expanded(
                 child: TabBarView(
               children: [
                 CommunityTabView(mainViewModel: mainViewModel),
-                LeaderboardTabView(),
+                ChangeNotifierProvider(
+                  create: (context) => LeaderboardViewModel(),
+                  builder: (context, child) {
+                    return LeaderboardTabView(
+                      leaderboardViewModel:
+                          Provider.of<LeaderboardViewModel>(context),
+                      mainViewModel: mainViewModel,
+                    );
+                  },
+                ),
                 MapTabView(mapViewModel: mapViewModel),
                 ChangeNotifierProvider(
                   create: (context) => HistoryViewModel(),
@@ -54,40 +64,12 @@ class MainView extends StatelessWidget {
                   },
                 )
               ],
-            )
-                // child: _buildTabBody(
-                //     mainViewModel, context), // Ihr eigentlicher Inhalt
-                ),
+            )),
             Container(
-              height: 4, // Höhe des unteren Balkens
-              color: Color(0xFF35B05C), // Hintergrundfarbe des unteren Balkens
+              height: 4,
+              color: Color(0xFF35B05C),
             ),
           ],
         ));
-  }
-
-  Widget _buildTabBody(MainViewModel mainViewModel, BuildContext context) {
-    switch (mainViewModel.selectedIndex) {
-      case 0:
-        return CommunityTabView(
-          mainViewModel: mainViewModel,
-        );
-      case 1:
-        return LeaderboardTabView();
-      case 2:
-        return MapTabView(mapViewModel: mapViewModel);
-      case 3:
-        return ChangeNotifierProvider(
-          create: (context) => HistoryViewModel(),
-          builder: (context, child) {
-            return HistoryTabView(
-              historyViewModel: Provider.of<HistoryViewModel>(context),
-              mainViewModel: mainViewModel,
-            );
-          },
-        );
-      default:
-        return Container();
-    }
   }
 }

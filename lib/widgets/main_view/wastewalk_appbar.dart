@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 class WasteWalkAppBar extends StatefulWidget implements PreferredSizeWidget {
   const WasteWalkAppBar({super.key});
+
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
   @override
   State<WasteWalkAppBar> createState() => _WasteWalkAppBarState();
 }
 
 class _WasteWalkAppBarState extends State<WasteWalkAppBar> {
-  bool loggedIn = true;
+  bool isLoggedIn = false;
   String? imageUrl;
 
   @override
@@ -23,24 +24,41 @@ class _WasteWalkAppBarState extends State<WasteWalkAppBar> {
             height: 40,
           ),
           Row(children: [
-            ClipOval(
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  splashColor: Colors.white,
-                  onTap: () {
-                    print("OpenProfile");
-                  },
-                  child: CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Colors.grey[300],
-                    child: imageUrl == null
-                        ? const Icon(Icons.person, size: 24)
-                        : null,
+            isLoggedIn
+                ? ClipOval(
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        splashColor: Colors.white,
+                        onTap: () {
+                          print("OpenProfile");
+                        },
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.grey[300],
+                          child: imageUrl == null
+                              ? const Icon(Icons.person, size: 24)
+                              : null,
+                        ),
+                      ),
+                    ),
+                  )
+                : TextButton(
+                    onPressed: () => {},
+                    child: const Text(
+                      "Anmelden",
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                    style: TextButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                            color: Theme.of(context).colorScheme.primary,
+                            width: 2),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
             MenuAnchor(
               menuChildren: const [
                 MenuItemButton(

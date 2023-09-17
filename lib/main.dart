@@ -27,14 +27,14 @@ class MyApp extends StatelessWidget {
           // Amplify ist konfiguriert, App normal starten
           return MaterialApp(
               theme: ThemeData(
-                colorScheme:
-                    ColorScheme.fromSeed(seedColor: const Color(0xFF35B05C)),
+                colorScheme: ColorScheme.light(primary: Color(0xFF35B05C)),
                 textTheme: const TextTheme(
                     headlineSmall:
                         TextStyle(fontSize: 10, color: Colors.black)),
                 useMaterial3: true,
               ),
               home: DefaultTabController(
+                initialIndex: 2,
                 length: 4,
                 child: MultiProvider(
                   providers: [
