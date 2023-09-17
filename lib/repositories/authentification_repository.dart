@@ -32,4 +32,6 @@ class AuthentificationRepository {
   Future<void> signOutCurrentUser() async {
     authentification.signOutCurrentUser();
   }
+
+  Future<void> confirmNewPassword() async {}
 }
