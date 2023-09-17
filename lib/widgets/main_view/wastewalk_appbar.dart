@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:waste_walking_ba/viewmodels/login_viewmodel.dart';
+import 'package:waste_walking_ba/viewmodels/main_viewmodel.dart';
 import 'package:waste_walking_ba/views/page_views/login_view.dart';
 
 class WasteWalkAppBar extends StatefulWidget implements PreferredSizeWidget {
-  const WasteWalkAppBar({super.key});
+  MainViewModel mainViewModel;
+
+  WasteWalkAppBar({required this.mainViewModel});
 
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
   @override
@@ -11,7 +15,6 @@ class WasteWalkAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _WasteWalkAppBarState extends State<WasteWalkAppBar> {
-  bool isLoggedIn = false;
   String? imageUrl;
 
   @override
@@ -27,14 +30,19 @@ class _WasteWalkAppBarState extends State<WasteWalkAppBar> {
             height: 40,
           ),
           Row(children: [
-            isLoggedIn
+            widget.mainViewModel.authentificationRepository.isSignedIn
                 ? ClipOval(
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
                         splashColor: Colors.white,
-                        onTap: () {
-                          //TODO
+                        onTap: () async {
+                          final success = await widget
+                              .mainViewModel.authentificationRepository
+                              .signOutCurrentUser();
+                          if (success) {
+                            widget.mainViewModel.update();
+                          }
                         },
                         child: CircleAvatar(
                           radius: 20,
@@ -47,13 +55,23 @@ class _WasteWalkAppBarState extends State<WasteWalkAppBar> {
                     ),
                   )
                 : TextButton(
-                    onPressed: () => {
-                      Navigator.push(
+                    onPressed: () async {
+                      var result = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                LoginView(viewModel: LoginViewModel())),
-                      )
+                          builder: (context) => ChangeNotifierProvider(
+                              create: (context) => LoginViewModel(),
+                              builder: (context, child) {
+                                return LoginView(
+                                    viewModel:
+                                        Provider.of<LoginViewModel>(context));
+                              }),
+                        ),
+                      );
+
+                      if (result == 'logged_in') {
+                        widget.mainViewModel.update();
+                      }
                     },
                     child: const Text(
                       "Anmelden",

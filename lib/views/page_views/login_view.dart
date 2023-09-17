@@ -18,7 +18,7 @@ class _LoginViewState extends State<LoginView> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back), // Das Icon für den "Zurück"-Button
           onPressed: () {
-            Navigator.pop(context); // Gehe zur vorherigen Seite zurück
+            Navigator.pop(context, ""); // Gehe zur vorherigen Seite zurück
           },
         ),
       ),
@@ -55,12 +55,17 @@ class _LoginViewState extends State<LoginView> {
                 controller: widget.viewModel.passwordController,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.lock),
+                  suffixIcon: GestureDetector(
+                      child: Icon(widget.viewModel.passwordObscured
+                          ? Icons.visibility_off
+                          : Icons.visibility),
+                      onTap: () => {widget.viewModel.togglePasswordObscured()}),
                   labelText: "Passwort",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
                   ),
                 ),
-                obscureText: true,
+                obscureText: widget.viewModel.passwordObscured,
               ),
               Row(
                 children: [
@@ -77,8 +82,12 @@ class _LoginViewState extends State<LoginView> {
                 height: 48,
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    widget.viewModel.login();
+                  onPressed: () async {
+                    final success = await widget.viewModel.login();
+                    print(success);
+                    if (success) {
+                      Navigator.pop(context, 'logged_in');
+                    }
                   },
                   child: Text(
                     'Anmelden',

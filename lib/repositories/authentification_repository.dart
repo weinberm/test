@@ -8,14 +8,23 @@ class AuthentificationRepository {
     return _instance;
   }
 
-  AuthentificationRepository._internal();
+  AuthentificationRepository._internal() {
+    initialize();
+    print(isSignedIn);
+  }
 
   AmplifyAuthService authentification = AmplifyAuthService();
 
   bool isSignedIn = false;
 
+  Future<void> initialize() async {
+    await isUserSignedIn();
+    await signOutCurrentUser();
+  }
+
   Future<bool> isUserSignedIn() async {
     final result = await authentification.isUserSignedIn();
+    isSignedIn = result;
     return result;
   }
 
@@ -25,12 +34,21 @@ class AuthentificationRepository {
   //   return user;
   // }
 
-  Future<void> signInUser(String username, String password) async {
-    final result = await authentification.signInUser(username, password);
+  Future<bool> signInUser(String username, String password) async {
+    try {
+      await authentification.signInUser(username, password);
+      isSignedIn = true;
+      return true;
+    } catch (e) {
+      print("x");
+      return false;
+    }
   }
 
-  Future<void> signOutCurrentUser() async {
-    authentification.signOutCurrentUser();
+  Future<bool> signOutCurrentUser() async {
+    await authentification.signOutCurrentUser();
+    isSignedIn = false;
+    return true;
   }
 
   Future<void> confirmNewPassword() async {}

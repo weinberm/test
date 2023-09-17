@@ -26,6 +26,7 @@ class AmplifyAuthService {
       await _handleSignInResult(result);
     } on AuthException catch (e) {
       safePrint('Error signing in: ${e.message}');
+      rethrow;
     }
   }
 
@@ -35,6 +36,7 @@ class AmplifyAuthService {
       safePrint('Sign out completed successfully');
     } else if (result is CognitoFailedSignOut) {
       safePrint('Error signing user out: ${result.exception.message}');
+      throw Error();
     }
   }
 
