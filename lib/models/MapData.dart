@@ -30,7 +30,8 @@ class MapData {
 
   double currentZoom = 18;
 
-  Coordinate lastCoordinate = Coordinate(latitude: 0, longtitude: 0);
+  Coordinate lastCoordinate =
+      Coordinate(longtitude: 9.1830674, latitude: 48.7902398);
 
   MapData() {
     wasteWalkRoutes.add(currentWasteWalkRoute);

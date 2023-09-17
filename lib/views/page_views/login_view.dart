@@ -12,6 +12,15 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back), // Das Icon für den "Zurück"-Button
+          onPressed: () {
+            Navigator.pop(context); // Gehe zur vorherigen Seite zurück
+          },
+        ),
+        title: Text('Anmeldung'),
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
