@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:waste_walking_ba/viewmodels/login_viewmodel.dart';
 
 class LoginView extends StatefulWidget {
   @override
   _LoginViewState createState() => _LoginViewState();
+
+  final LoginViewModel viewModel;
+
+  LoginView({required this.viewModel});
 }
 
 class _LoginViewState extends State<LoginView> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,18 +21,28 @@ class _LoginViewState extends State<LoginView> {
             Navigator.pop(context); // Gehe zur vorherigen Seite zurück
           },
         ),
-        title: Text('Anmeldung'),
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              const Row(
+                children: [
+                  Text(
+                    "Willkommen",
+                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 64,
+              ),
               TextField(
-                controller: emailController,
+                controller: widget.viewModel.emailController,
                 decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.email),
                   labelText: "E-Mail",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
@@ -40,8 +52,9 @@ class _LoginViewState extends State<LoginView> {
               ),
               SizedBox(height: 20.0),
               TextField(
-                controller: passwordController,
+                controller: widget.viewModel.passwordController,
                 decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.lock),
                   labelText: "Passwort",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
@@ -49,29 +62,51 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 obscureText: true,
               ),
+              Row(
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      //TODO
+                    },
+                    child: Text('Passwort vergessen?'),
+                  ),
+                ],
+              ),
               SizedBox(height: 20.0),
-              ElevatedButton(
-                onPressed: () {
-                  // Ihre Logik für den Login
-                },
-                child: Text('Anmelden'),
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
+              Container(
+                height: 48,
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    widget.viewModel.login();
+                  },
+                  child: Text(
+                    'Anmelden',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
                   ),
                 ),
               ),
               TextButton(
                 onPressed: () {
-                  // Ihre Logik für "Passwort vergessen"
+                  // TODO
                 },
-                child: Text('Passwort vergessen?'),
-              ),
-              TextButton(
-                onPressed: () {
-                  // Ihre Logik für die Registrierung
-                },
-                child: Text('Registrieren'),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Noch kein Mitglied?"),
+                    TextButton(
+                        onPressed: () => {
+                              //TODO
+                            },
+                        child: Text("Registrieren"))
+                  ],
+                ),
               ),
             ],
           ),

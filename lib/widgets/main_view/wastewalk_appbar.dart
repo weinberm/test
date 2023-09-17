@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:waste_walking_ba/viewmodels/login_viewmodel.dart';
+import 'package:waste_walking_ba/views/page_views/login_view.dart';
 
 class WasteWalkAppBar extends StatefulWidget implements PreferredSizeWidget {
   const WasteWalkAppBar({super.key});
@@ -32,7 +34,7 @@ class _WasteWalkAppBarState extends State<WasteWalkAppBar> {
                       child: InkWell(
                         splashColor: Colors.white,
                         onTap: () {
-                          print("OpenProfile");
+                          //TODO
                         },
                         child: CircleAvatar(
                           radius: 20,
@@ -45,7 +47,14 @@ class _WasteWalkAppBarState extends State<WasteWalkAppBar> {
                     ),
                   )
                 : TextButton(
-                    onPressed: () => {},
+                    onPressed: () => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                LoginView(viewModel: LoginViewModel())),
+                      )
+                    },
                     child: const Text(
                       "Anmelden",
                       style: TextStyle(fontSize: 16, color: Colors.white),

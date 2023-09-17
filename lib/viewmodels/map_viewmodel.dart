@@ -60,10 +60,6 @@ class MapViewModel extends ChangeNotifier {
 
     updateViewBoxBorder(currentPos);
 
-    while (!aS.configured) {
-      print("AWS Not Config Yet");
-      await Future.delayed(const Duration(seconds: 1)); // Warte 1 Sekunde
-    }
     await filterAndSetWasteWalkRecords(
         boxBorderTop, boxBorderRight, boxBorderBottom, boxBorderLeft);
     mapData.addOtherWasteWalksToBoxView();
@@ -80,9 +76,8 @@ class MapViewModel extends ChangeNotifier {
 
   Future<void> filterAndSetWasteWalkRecords(
       double top, double right, double bottom, double left) async {
-    List<WasteWalkRecord?> wasteWalkRecords =
-        await amplifyWasteWalkRecordService.queryItemsWithinBorder(
-            top, right, bottom, left);
+    List<WasteWalkRecord?> wasteWalkRecords = await walkRecordRepository
+        .queryItemsWithinBorder(top, right, bottom, left);
 
     List<WasteWalkRecord> filteredList = wasteWalkRecords
         .where((record) => record != null)
@@ -175,8 +170,8 @@ class MapViewModel extends ChangeNotifier {
   void stopTracking() async {
     trackingActive = false;
     stopTimer();
-    String userId = await amplifyService.getCurrentUserId();
-    amplifyWasteWalkRecordService.createWasteWalkRecord(
+    String userId = await authentificationRepository.getCurrentUserId();
+    walkRecordRepository.createWasteWalkRecord(
         currentWasteWalkCoordinates, userId, top, right, bottom, left);
 
     currentWasteWalkCoordinates.clear();

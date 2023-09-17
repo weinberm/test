@@ -23,8 +23,6 @@ class HistoryViewModel extends ChangeNotifier {
         .where((record) => record != null)
         .map((record) => record!)
         .toList();
-    print(recordHistory);
-    print(recordHistory.length);
     notifyListeners();
   }
 }

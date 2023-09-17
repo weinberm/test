@@ -34,4 +34,6 @@ class AuthentificationRepository {
   }
 
   Future<void> confirmNewPassword() async {}
+
+  getCurrentUserId() {}
 }

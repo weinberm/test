@@ -53,7 +53,7 @@ class AmplifyWasteWalkRecordService {
   Future<List<WasteWalkRecord?>> queryItemsWithId(String id) async {
     try {
       final request = ModelQueries.list(WasteWalkRecord.classType,
-          where: WasteWalkRecord.ID
+          where: WasteWalkRecord.USER_ID
               .eq(id)); // Hier wird nach einer bestimmten ID gefiltert
       final response = await Amplify.API.query(request: request).response;
 
