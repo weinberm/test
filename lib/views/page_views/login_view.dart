@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:waste_walking_ba/viewmodels/login_viewmodel.dart';
+import 'package:waste_walking_ba/viewmodels/register_viewmodel.dart';
+import 'package:waste_walking_ba/views/page_views/register_view.dart';
 
 class LoginView extends StatefulWidget {
   @override
-  _LoginViewState createState() => _LoginViewState();
+  LoginViewState createState() => LoginViewState();
 
   final LoginViewModel viewModel;
 
-  LoginView({required this.viewModel});
+  const LoginView({super.key, required this.viewModel});
 }
 
-class _LoginViewState extends State<LoginView> {
+class LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back), // Das Icon für den "Zurück"-Button
+          icon:
+              const Icon(Icons.arrow_back), // Das Icon für den "Zurück"-Button
           onPressed: () {
             Navigator.pop(context, ""); // Gehe zur vorherigen Seite zurück
           },
@@ -40,17 +44,17 @@ class _LoginViewState extends State<LoginView> {
                 height: 64,
               ),
               TextField(
-                controller: widget.viewModel.emailController,
+                controller: widget.viewModel.usernameController,
                 decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.email),
-                  labelText: "E-Mail",
+                  prefixIcon: const Icon(Icons.person),
+                  labelText: "Benutzername",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
                   ),
                 ),
-                keyboardType: TextInputType.emailAddress,
+                keyboardType: TextInputType.text,
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               TextField(
                 controller: widget.viewModel.passwordController,
                 decoration: InputDecoration(
@@ -73,11 +77,11 @@ class _LoginViewState extends State<LoginView> {
                     onPressed: () {
                       //TODO
                     },
-                    child: Text('Passwort vergessen?'),
+                    child: const Text('Passwort vergessen?'),
                   ),
                 ],
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               Container(
                 height: 48,
                 width: double.infinity,
@@ -89,15 +93,15 @@ class _LoginViewState extends State<LoginView> {
                       Navigator.pop(context, 'logged_in');
                     }
                   },
-                  child: Text(
-                    'Anmelden',
-                    style: TextStyle(color: Colors.black),
-                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
+                  ),
+                  child: const Text(
+                    'Anmelden',
+                    style: TextStyle(color: Colors.black),
                   ),
                 ),
               ),
@@ -108,12 +112,26 @@ class _LoginViewState extends State<LoginView> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Noch kein Mitglied?"),
+                    const Text("Noch kein Mitglied?"),
                     TextButton(
-                        onPressed: () => {
-                              //TODO
-                            },
-                        child: Text("Registrieren"))
+                        onPressed: () async {
+                          var result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChangeNotifierProvider(
+                                  create: (context) => RegisterViewModel(),
+                                  builder: (context, child) {
+                                    return RegisterView(
+                                        viewModel:
+                                            Provider.of<RegisterViewModel>(
+                                                context));
+                                  }),
+                            ),
+                          );
+
+                          if (result == 'register_success') {}
+                        },
+                        child: const Text("Registrieren"))
                   ],
                 ),
               ),

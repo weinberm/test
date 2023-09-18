@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_map/flutter_map.dart' as fm;
 import 'package:latlong2/latlong.dart';
-import 'package:waste_walking_ba/repositories/authentification_repository.dart';
 
 import 'package:waste_walking_ba/viewmodels/map_viewmodel.dart';
 

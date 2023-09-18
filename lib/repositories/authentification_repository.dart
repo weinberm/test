@@ -54,4 +54,25 @@ class AuthentificationRepository {
   Future<void> confirmNewPassword() async {}
 
   getCurrentUserId() {}
+
+  Future<bool> registerUser(
+      String username, String password, String email) async {
+    try {
+      await authentification.signUpUser(
+          username: username, password: password, email: email);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> confirmUser(String username, String confirmationCode) async {
+    try {
+      await authentification.confirmUser(
+          username: username, confirmationCode: confirmationCode);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

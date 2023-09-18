@@ -1,8 +1,6 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_api/amplify_api.dart';
-import 'package:waste_walking_ba/services/amplify_auth_service.dart';
-import 'package:waste_walking_ba/services/amplify_record_service.dart';
 import '../models/ModelProvider.dart';
 import '../amplifyconfiguration.dart';
 

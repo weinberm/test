@@ -5,7 +5,7 @@ import 'package:waste_walking_ba/viewmodels/main_viewmodel.dart';
 import 'package:waste_walking_ba/views/page_views/login_view.dart';
 
 class WasteWalkAppBar extends StatefulWidget implements PreferredSizeWidget {
-  MainViewModel mainViewModel;
+  final MainViewModel mainViewModel;
 
   WasteWalkAppBar({required this.mainViewModel});
 
@@ -73,10 +73,6 @@ class _WasteWalkAppBarState extends State<WasteWalkAppBar> {
                         widget.mainViewModel.update();
                       }
                     },
-                    child: const Text(
-                      "Anmelden",
-                      style: TextStyle(fontSize: 16, color: Colors.white),
-                    ),
                     style: TextButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       shape: RoundedRectangleBorder(
@@ -85,6 +81,10 @@ class _WasteWalkAppBarState extends State<WasteWalkAppBar> {
                             width: 2),
                         borderRadius: BorderRadius.circular(5),
                       ),
+                    ),
+                    child: const Text(
+                      "Anmelden",
+                      style: TextStyle(fontSize: 16, color: Colors.white),
                     ),
                   ),
             MenuAnchor(

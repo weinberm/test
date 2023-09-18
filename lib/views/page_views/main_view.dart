@@ -3,7 +3,6 @@ import 'package:waste_walking_ba/viewmodels/leaderboard_viewmodel.dart';
 import 'package:waste_walking_ba/viewmodels/main_viewmodel.dart';
 import 'package:waste_walking_ba/viewmodels/map_viewmodel.dart';
 import 'package:waste_walking_ba/viewmodels/history_viewmodel.dart';
-import 'package:waste_walking_ba/views/page_views/login_view.dart';
 import 'package:waste_walking_ba/widgets/main_view/bottom_navbar.dart';
 import 'package:waste_walking_ba/views/tab_views/community_tab_view.dart';
 import 'package:waste_walking_ba/views/tab_views/history_tab_view.dart';
