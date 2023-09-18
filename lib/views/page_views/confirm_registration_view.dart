@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:waste_walking_ba/viewmodels/confirm_registration_viewmodel.dart';
-import 'package:waste_walking_ba/viewmodels/register_viewmodel.dart';
-import 'package:waste_walking_ba/views/page_views/register_view.dart';
 
 class ConfirmRegistrationView extends StatefulWidget {
   @override
